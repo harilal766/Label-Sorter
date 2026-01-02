@@ -73,7 +73,6 @@ class LabelSorter:
                         items_list = page_debrief.get("items",None)
                         for item_dict in items_list:
                             item_count = len(items_list)
-                            
                             if item_count == 1:
                                 chosen_summary_dict = summary_dict
                             elif item_count >1:
@@ -87,9 +86,10 @@ class LabelSorter:
                                         summary_dict[self.misc_filename]["pages"].append(mixed_page)
                             # getting a clean item name
                             item_name = re.sub(
-                                r"\n|\||Shipping Charges|\/","",
+                                r"\n|\||Shipping Charges|\/|\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)","",
                                 item_dict["item_name"]
                             )
+                            print(item_name)
                             item_qty = item_dict["qty"]
                             if not item_name in chosen_summary_dict.keys():
                                 chosen_summary_dict[item_name] = {}
