@@ -35,11 +35,11 @@ class AmazonLabel(BaseLabel):
                 product_table = self.page_table[0]
                 product_rows = product_table[1:-3]
                 for row in product_rows:
-                        prod_name = row[1]; prod_qty = row[3]
-                        page_dict = {"item_name" : prod_name, "qty" : prod_qty}
-                        
-                        if page_dict["item_name"] != None:
-                            self.page_debrief_dict["items"].append(page_dict)
+                    prod_name = row[1]; prod_qty = row[3]
+                    page_dict = {"item_name" : prod_name, "qty" : prod_qty}
+
+                    if page_dict["item_name"] != None:
+                        self.page_debrief_dict["items"].append(page_dict)
         except Exception as e:
             print(e)
         else:
