@@ -75,7 +75,7 @@ class LabelSorter:
                             item_count = len(items_list)
                             if item_count == 1:
                                 chosen_summary_dict = summary_dict
-                            elif item_count >1:
+                            elif item_count > 1:
                                 if not self.misc_filename in summary_dict.keys():
                                     summary_dict[self.misc_filename] = {
                                         "pages" : [], "summary" : {}
@@ -89,14 +89,14 @@ class LabelSorter:
                                 r"\s{2}|\n|Shipping Charges|\/|\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)","",
                                 item_dict["item_name"]
                             )
-                            print(item_name)
                             item_qty = item_dict["qty"]
+                            # give dedicated dict for each item name.
                             if not item_name in chosen_summary_dict.keys():
                                 chosen_summary_dict[item_name] = {}
-                            
+                            # give empty list or 0 for item name, based on order items.
                             if not item_qty in chosen_summary_dict[item_name].keys():
                                 chosen_summary_dict[item_name][item_qty] = [] if item_count == 1 else 0
-                                
+                            # populate the page numbers or item variation count, based on the same criteria commented above 👆🏼.
                             chosen_summary_dict[item_name][item_qty] += pages if item_count == 1 else 1
         except Exception as e:
             print(e)
@@ -116,7 +116,7 @@ class LabelSorter:
             page_count = len(page_numbers)
             order_count = int(page_count/2) if self.platform == "Amazon" else page_count
             
-            sorted_pdf_file = f"{re.sub(r"[\|\.\/]*",r"",pdf_name)} - {order_count} order{"s" if order_count > 1 else ""}.pdf"
+            sorted_pdf_file = f"{re.sub(r"[\|\.\/]*",r"",pdf_name)} -- {order_count} order{"s" if order_count > 1 else ""}.pdf"
         except Exception as e:
             print(e)
         else:
