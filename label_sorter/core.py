@@ -86,7 +86,7 @@ class LabelSorter:
                                         summary_dict[self.misc_filename]["pages"].append(mixed_page)
                             # getting a clean item name
                             item_name = re.sub(
-                                r"\n|\||Shipping Charges|\/|\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)","",
+                                r"\s{2}|\n|Shipping Charges|\/|\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)","",
                                 item_dict["item_name"]
                             )
                             print(item_name)
