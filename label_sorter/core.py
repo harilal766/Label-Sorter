@@ -71,8 +71,6 @@ class LabelSorter:
                     if page_debrief.get("order_id",None):
                         order_id = page_debrief.get("order_id",None)
                         items_list = page_debrief.get("items",None)
-                        if page_number == 90:
-                            print(page_debrief)
                         for item_dict in items_list:
                             item_count = len(items_list)
                             if item_count == 1:

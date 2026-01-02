@@ -32,8 +32,12 @@ class AmazonLabel(BaseLabel):
             if self.find_amazon_page_type() == "Invoice":
                 self.page_debrief_dict["order_id"] = order_id_match[0]
                 
+                # Update product rows based on overlapped and normal invoice pages
                 product_table = self.page_table[0]
                 product_rows = product_table[1:-3]
+                if not re.search(r'Whether tax is',self.page_text):
+                    product_rows = product_table[1:-1]
+                    print(product_rows)
                 for row in product_rows:
                     prod_name = row[1]; prod_qty = row[3]
                     page_dict = {"item_name" : prod_name, "qty" : prod_qty}
