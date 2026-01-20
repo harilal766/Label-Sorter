@@ -23,7 +23,7 @@ class LabelSorter:
             with pdfplumber.open(self.input_filepath) as pdf_file:
                 total_pages = 0; amazon_count = 0 
                 
-                shopify_order_id_count, amazon_order_id_count = 0, 0
+                shopify_order_id_count, amazon_order_id_count, flipkart_order_count = 0, 0, 0
                 
                 for page_index, page in enumerate(pdf_file.pages):
                     total_pages += 1
@@ -37,12 +37,18 @@ class LabelSorter:
                         shopify_order_id_count += 1
                     elif re.findall(am.amazon_order_id_pattern, page_text):
                         amazon_order_id_count += 1
-                        
+                    
+                    platform_instances = {
+                        "Amazon" : AmazonLabel(page_text=page_text, page_table=page_tables,page_num=0)
+                    }    
+                    
                 if total_pages == shopify_order_id_count:
                     platform = "Shopify"
                 # this condition is not complete, need to add overlap page detection
                 elif amazon_order_id_count > 0:
                     platform = "Amazon"
+                elif total_pages == 2*flipkart_order_count:
+                    platform = "Flipkart"
             
         except FileNotFoundError:
             print(f"The file {self.input_filepath} does not exist.")

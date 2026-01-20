@@ -11,5 +11,3 @@ class FlipkartLabel(BaseLabel):
             pass
         except Exception as e:
             print(e)
-        
-        
