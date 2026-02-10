@@ -8,7 +8,7 @@
 
 ## Installation
 ```
-pip install ecom_label_sorter
+pip install label_sorter
 ```
 
 ## Usage

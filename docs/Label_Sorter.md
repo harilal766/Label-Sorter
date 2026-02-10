@@ -1,11 +1,9 @@
 # LabelSorter Class
-### Location : [core.py](label_sorter/core.py)
 ## Attributes
 Sorting dictionary : to store the sorted data i.e; product name, quantity, and page numbers.
 label filepath : path of the input pdf file
 output folder : name of the folder to store sorted pdf files, created by replacing the `.pdf` extension with empty string
 platform : platform of the pdf label eg : Amazon, Shopify etc...
-
 
 # Technical Terms to Remember
 Sorting key :
@@ -13,22 +11,21 @@ Platform :
 
 ## Methods and their working logic
 ### Find platform
+Accepts the pdf filepath as argument.
 Loops through each page of the pdf file, counts order id occurences of each  platforms.
 After the loop is exited, the total page count and counts of these orders ids are compared,
 based on these conditions.
 1. if shopify order ids are same as that of page counts, the pdf belongs to shopify.
-2. if amazon order id is present, its amazon.
+2. if amazon order id is present, and the page numbers are more than or equal to the order id count, its amazon.
 
-### Sort labels
-Loops the pages, and activates the sorting algorithm based on the platform, the dictionary returned from it contains order id, product name and quantity of each page, it is used to create the sorting dictionary
+# Create sorted summary
+1. Iterates through each page again and extracts the texts and tables in each page.
+2. pages that contains the order id of the detected platform is analyzed to get the product name, variation and quantity.
+    1. if more than one product is present in the page, its a miscellaneous order which have its own dedicated dictionary.
+    2. the product variation and the pages where it appears are feeded to the dedicated dictionary based on how many items are present in each order.
+    3. before adding to the dictionary, reserved characters are removed from the variation name to avoid issues while it's rendered as sorted pdf group later. 
+3. after all pages are analyzed the miscellaneous dictionary is added to the "mixed" key of main dictionary.
 
-### Populate shipment summary
-Accepts sorting key and page numbers list as arguments
-1. if the sorting key == "Mixed", a nested dictionary which have the keys pages and summary, 
-    pages contains a list that contains the page numbers and summary will contain product names and
-    quantites of the mixed section.
-2. if the sorting key is a product name, 
-    product name and quantity will be provided as the main key and nested dictionaries inside it which contains the quantity and respective page numbers.
 
 ### Create sorted pdf files
 after the sorted summary dict is generated, this function will use a nested loop to analyze it and will generate the pdf file based on the page numbers list.    

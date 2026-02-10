@@ -92,7 +92,7 @@ class LabelSorter:
                                         summary_dict[self.misc_filename]["pages"].append(mixed_page)
                             # getting a clean item name
                             item_name = re.sub(
-                                r"\s{2}|\n|Shipping Charges|\/|\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|:","",
+                                r"\s{2}|\n|Shipping Charges|\/|\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|:"," ",
                                 item_dict["item_name"]
                             )
                             item_qty = item_dict["qty"]
@@ -104,6 +104,8 @@ class LabelSorter:
                                 chosen_summary_dict[item_name][item_qty] = [] if item_count == 1 else 0
                             # populate the page numbers or item variation count, based on the same criteria commented above 👆🏼.
                             chosen_summary_dict[item_name][item_qty] += pages if item_count == 1 else 1
+        except AttributeError as ae:
+            raise AttributeError(f"Attribute issues found at summary dictionary : \n {ae}")
         except Exception as e:
             print(e)
         else:
