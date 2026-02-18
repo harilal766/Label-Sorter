@@ -14,6 +14,9 @@ class LabelSorter:
         self.output_folder = self.input_filepath.replace(".pdf","")
         self.platform = self.find_platform()
         self.misc_filename = "Mixed"
+        # regex patterns for filename sanitization which will be needed for unit testing also
+        self.reserved_pattern = r"[:./\]"
+        self.product_codes_pattern = r"[A-Z]*\d*" # HSN30049011
         
     def find_platform(self) -> str:
         platform = None
@@ -95,12 +98,14 @@ class LabelSorter:
                             if not item_name == None:
                                 # getting a clean item name
                                 # remove reserved characters
-                                item_name = re.sub(r"[:./]","",item_name)
+                                item_name = re.sub(self.reserved_pattern,"",item_name)
                                 # remove product codes
+                                
                                 item_name = re.sub(
                                     r"\s{2}|\n|Shipping Charges|\/|\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)"," ",
                                     item_name
                                 )
+                                
                                 item_qty = item_dict["qty"]
                                 # give dedicated dict for each item name.
                                 if not item_name in chosen_summary_dict.keys():
