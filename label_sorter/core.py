@@ -93,28 +93,20 @@ class LabelSorter:
                                 for mixed_page in pages:
                                     if not mixed_page in summary_dict[self.misc_filename]["pages"]: 
                                         summary_dict[self.misc_filename]["pages"].append(mixed_page)
-                                        
-                            item_name = item_dict.get("item_name", None)
-                            if not item_name == None:
-                                # getting a clean item name
-                                # remove reserved characters
-                                item_name = re.sub(self.reserved_pattern,"",item_name)
-                                # remove product codes
-                                
-                                item_name = re.sub(
-                                    r"\s{2}|\n|Shipping Charges|\/|\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)"," ",
-                                    item_name
-                                )
-                                
-                                item_qty = item_dict["qty"]
-                                # give dedicated dict for each item name.
-                                if not item_name in chosen_summary_dict.keys():
-                                    chosen_summary_dict[item_name] = {}
-                                # give empty list or 0 for item name, based on order items.
-                                if not item_qty in chosen_summary_dict[item_name].keys():
-                                    chosen_summary_dict[item_name][item_qty] = [] if item_count == 1 else 0
-                                # populate the page numbers or item variation count, based on the same criteria commented above 👆🏼.
-                                chosen_summary_dict[item_name][item_qty] += pages if item_count == 1 else 1
+                            # getting a clean item name
+                            item_name = re.sub(
+                                r"\s{2}|\n|Shipping Charges|\/|\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|:"," ",
+                                item_dict["item_name"]
+                            )
+                            item_qty = item_dict["qty"]
+                            # give dedicated dict for each item name.
+                            if not item_name in chosen_summary_dict.keys():
+                                chosen_summary_dict[item_name] = {}
+                            # give empty list or 0 for item name, based on order items.
+                            if not item_qty in chosen_summary_dict[item_name].keys():
+                                chosen_summary_dict[item_name][item_qty] = [] if item_count == 1 else 0
+                            # populate the page numbers or item variation count, based on the same criteria commented above 👆🏼.
+                            chosen_summary_dict[item_name][item_qty] += pages if item_count == 1 else 1
         except AttributeError as ae:
             raise AttributeError(f"Attribute issues found at summary dictionary : \n {ae}")
         except Exception as e:
