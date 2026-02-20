@@ -93,10 +93,15 @@ class LabelSorter:
                                 for mixed_page in pages:
                                     if not mixed_page in summary_dict[self.misc_filename]["pages"]: 
                                         summary_dict[self.misc_filename]["pages"].append(mixed_page)
+                                        
+                            item_name = item_dict.get("item_name",None)
                             # getting a clean item name
+                            # removing reserved characters from the filename
+                            item_name = re.sub(r"[,]","",item_name)
+                            # removing product codes
                             item_name = re.sub(
                                 r"\s{2}|\n|Shipping Charges|\/|\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|:"," ",
-                                item_dict["item_name"]
+                                item_name
                             )
                             item_qty = item_dict["qty"]
                             # give dedicated dict for each item name.
