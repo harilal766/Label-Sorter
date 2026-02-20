@@ -60,6 +60,16 @@ class LabelSorter:
         else:
             return platform
 
+    def sanitize_filename(self,filename):
+        sanitized_filename = None
+        try:
+            sanitization_patterns = (self.reserved_pattern, self.product_codes_pattern)
+            for pattern in sanitization_patterns:
+                sanitized_filename = re.sub(pattern,"",filename)
+            return sanitized_filename
+        except Exception as e:
+            print(e)
+            
     def create_sorted_summary(self):
         page_debrief = None; 
         # summary dictionaries
@@ -97,10 +107,10 @@ class LabelSorter:
                             item_name = item_dict.get("item_name",None)
                             # getting a clean item name
                             # removing reserved characters from the filename
-                            item_name = re.sub(self.reserved_pattern,"",item_name)
+                            item_name = re.sub(r"[,]","",item_name)
                             # removing product codes
                             item_name = re.sub(
-                                r"\s{2}|\n|Shipping Charges|\/|\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|"," ",
+                                r"\s{2}|\n|Shipping Charges|\/|\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|:"," ",
                                 item_name
                             )
                             item_qty = item_dict["qty"]
