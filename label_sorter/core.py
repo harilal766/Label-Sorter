@@ -67,6 +67,7 @@ class LabelSorter:
             sanitization_patterns = (self.reserved_pattern, self.product_codes_pattern, self.another_pattern)
             for pattern in sanitization_patterns:
                 sanitized_filename = re.sub(pattern,"",filename)
+                filename = sanitized_filename
             return sanitized_filename
         except Exception as e:
             print(e)
