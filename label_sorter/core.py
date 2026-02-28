@@ -62,15 +62,13 @@ class LabelSorter:
             return platform
 
     def sanitize_filename(self,filename):
-        sanitized_filename = None
         try:
             sanitization_patterns = (self.reserved_pattern, self.product_codes_pattern, self.another_pattern)
             for pattern in sanitization_patterns:
-                sanitized_filename = re.sub(pattern,"",filename)
-                filename = sanitized_filename
-            return sanitized_filename
-        except Exception as e:
-            print(e)
+                filename = re.sub(pattern,"",filename)
+            return filename
+        except TypeError as te:
+            raise TypeError(f"Got {type(filename)} instead of string in sanitized filename")
             
     def create_sorted_summary(self):
         page_debrief = None; 
