@@ -16,7 +16,8 @@ class LabelSorter:
         self.misc_filename = "Mixed"
         # regex patterns for filename sanitization which will be needed for unit testing also
         self.reserved_pattern = r"[,]"
-        self.product_codes_pattern = r"[A-Z]*\d*" # HSN30049011
+        self.product_codes_pattern = r"\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|" # HSN30049011
+        self.another_pattern = r"\s{2}|\n|Shipping Charges|\/|:"
         
     def find_platform(self) -> str:
         platform = None
@@ -63,7 +64,7 @@ class LabelSorter:
     def sanitize_filename(self,filename):
         sanitized_filename = None
         try:
-            sanitization_patterns = (self.reserved_pattern, self.product_codes_pattern)
+            sanitization_patterns = (self.reserved_pattern, self.product_codes_pattern, self.another_pattern)
             for pattern in sanitization_patterns:
                 sanitized_filename = re.sub(pattern,"",filename)
             return sanitized_filename
@@ -107,10 +108,7 @@ class LabelSorter:
                             item_name = item_dict.get("item_name",None)
                             # getting a clean item name
                             
-                            item_name = re.sub(
-                                r"\s{2}|\n|Shipping Charges|\/|\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|:"," ",
-                                item_name
-                            )
+                            item_name = self.sanitize_filename(filename=item_name)
                             item_qty = item_dict["qty"]
                             # give dedicated dict for each item name.
                             if not item_name in chosen_summary_dict.keys():
