@@ -166,17 +166,18 @@ class LabelSorter:
         # save the summary as a json file to the output folder
         with open(f"{self.output_folder}/summary.json","w") as summary_json:
             json.dump(summary_dict, summary_json)
-            
+        output_count = 0
         try:
             print(f"Sorted Summary :")
             for sorting_key, value in summary_dict.items():
+                output_count += 1
                 # Assigning output file name and its pages according to order type
                 # single item orders
                 if sorting_key != self.misc_filename:
                     #print(f"Writing Single item order",end=", ")
                     for qty,page_list in value.items():
                         #print(f"Detected more than one qty.")
-                        self.create_single_pdf_file(pdf_name=f"{sorting_key} - {qty}", page_numbers=page_list)
+                        self.create_single_pdf_file(pdf_name=f"{output_count} - {sorting_key} - {qty}", page_numbers=page_list)
                 else:
                     self.create_single_pdf_file(
                         pdf_name = self.misc_filename, page_numbers= value.get("pages",None)
