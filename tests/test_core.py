@@ -20,3 +20,10 @@ class Test_LabelSorter:
     
     def test_create_sorted_summary(self):
         assert type(self.label_inst.create_sorted_summary()) == dict
+
+
+    def test_output_files(self):
+        """
+        Check output filenames and make sure the numbering is in correct order, mixed file have number as well.
+        all the files except the summary.json should have .pdf extension
+        """
