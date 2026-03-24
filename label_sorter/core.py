@@ -163,9 +163,11 @@ class LabelSorter:
             os.makedirs(self.output_folder)
             print(f"Created output folder : {self.output_folder}")
         
+        """
         # save the summary as a json file to the output folder
         with open(f"{self.output_folder}/summary.json","w") as summary_json:
             json.dump(summary_dict, summary_json)
+        """
         output_count = 0
         try:
             print(f"Sorted Summary :")
@@ -177,10 +179,13 @@ class LabelSorter:
                     #print(f"Writing Single item order",end=", ")
                     for qty,page_list in value.items():
                         #print(f"Detected more than one qty.")
-                        self.create_single_pdf_file(pdf_name=f"{output_count} - {sorting_key} - {qty}", page_numbers=page_list)
+                        out_pdf_name = f"{sorting_key} - {qty}"
+                        out_page_numbers = page_list
                 else:
-                    self.create_single_pdf_file(
-                        pdf_name = self.misc_filename, page_numbers= value.get("pages",None)
-                    )
+                    out_pdf_name = self.misc_filename
+                    out_page_numbers = value.get("pages",None)
+                self.create_single_pdf_file(
+                    pdf_name = f"{output_count} - {out_pdf_name}", page_numbers = out_page_numbers
+                )
         except Exception as e:
             print(f"Err : {e}")
