@@ -170,17 +170,18 @@ class LabelSorter:
         try:
             print(f"Sorted Summary :")
             for sorting_key, value in summary_dict.items():
-                output_count += 1
                 # Assigning output file name and its pages according to order type
                 # single item orders
                 if sorting_key != self.misc_filename:
                     #print(f"Writing Single item order",end=", ")
                     for qty,page_list in value.items():
+                        output_count += 1
                         #print(f"Detected more than one qty.")
                         self.create_single_pdf_file(pdf_name=f"{output_count} - {sorting_key} - {qty}", page_numbers=page_list)
                 else:
+                    output_count += 1
                     self.create_single_pdf_file(
-                        pdf_name = self.misc_filename, page_numbers= value.get("pages",None)
+                        pdf_name = f"{output_count} - {self.misc_filename}", page_numbers= value.get("pages",None)
                     )
         except Exception as e:
             print(f"Err : {e}")
