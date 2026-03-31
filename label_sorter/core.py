@@ -129,7 +129,7 @@ class LabelSorter:
             sys.exit("Received Nonetype instead of page numbers")
         try:
             reader = PdfReader(self.input_filepath); writer = PdfWriter()
-            print(pdf_name, page_numbers)
+            #print(pdf_name, page_numbers)
             # adding pages to the writer
             for page in page_numbers:
                 writer.add_page(reader.pages[page-1])
@@ -137,7 +137,7 @@ class LabelSorter:
             page_count = len(page_numbers)
             order_count = int(page_count/2) if self.platform == "Amazon" else page_count
             
-            sorted_pdf_file = f"{re.sub(r"[\|\.\/]*",r"",pdf_name)} -- {order_count} order{"s" if order_count > 1 else ""}.pdf"
+            sorted_pdf_file = f"{re.sub(r"[\|\.\/]*",r"",pdf_name)} - {order_count} order{"s" if order_count > 1 else ""}.pdf"
         except Exception as e:
             print(e)
         else:
@@ -155,7 +155,7 @@ class LabelSorter:
         if len(summary_dict.keys()) == 0:
             sys.exit("Cannot sort with empty summary...")
             
-        order_count = None; page_numbers = None
+        #order_count = None; page_numbers = None
         output_file = None 
         
         # Create output folder if not created already.
@@ -174,6 +174,10 @@ class LabelSorter:
             for sorting_key, value in summary_dict.items():
                 # Assigning output file name and its pages according to order type
                 # single item orders
+                """
+                1. Both normal and mixed orders need different template to create a output pdf name.
+                2. the info needed are : output count, page numbers, quantity per order, pdf name, 
+                """
                 if sorting_key != self.misc_filename:
                     #print(f"Writing Single item order",end=", ")
                     for qty,page_list in value.items():
