@@ -12,4 +12,6 @@ with open("label_sorter.json","r") as json_file:
     amazon_pdf = os.path.join(test_label_dir, credentials["amazon"])
     shopify_pdf = os.path.join(test_label_dir, credentials["shopify"])
     
+    unsanitized_name = credentials["before_sanitize"]
+    sanitized_name = credentials["after_sanitize"]
     

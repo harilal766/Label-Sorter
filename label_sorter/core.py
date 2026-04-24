@@ -15,8 +15,8 @@ class LabelSorter:
         self.platform = self.find_platform()
         self.misc_filename = "Mixed"
         # regex patterns for filename sanitization which will be needed for unit testing also
-        self.reserved_pattern = r"[,]"
-        self.product_codes_pattern = r"\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|" # HSN30049011
+        self.reserved_pattern = r"[,\/\\\:\*\?\"\<\>\|]"
+        self.product_codes_pattern = r"\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|(HSN\d*)" # HSN30049011
         self.another_pattern = r"\s{2}|\n|Shipping Charges|\/|:"
         
     def find_platform(self) -> str:

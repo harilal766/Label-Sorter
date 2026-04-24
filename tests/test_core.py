@@ -7,7 +7,6 @@ from label_sorter.core import LabelSorter
 
 class Test_LabelSorter:
     label_inst = LabelSorter(pdf_path=amazon_pdf)
-    
     files = {
         "Shopify" : shopify_pdf,
         "Amazon" : amazon_pdf
@@ -21,6 +20,9 @@ class Test_LabelSorter:
     def test_create_sorted_summary(self):
         assert type(self.label_inst.create_sorted_summary()) == dict
 
+    def test_sanitize_filename(self):
+        sanitized = self.label_inst.sanitize_filename(unsanitized_name)
+        assert sanitized == sanitized_name
 
     def test_output_files(self):
         """
