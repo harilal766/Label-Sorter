@@ -18,6 +18,17 @@ based on these conditions.
 1. if shopify order ids are same as that of page counts, the pdf belongs to shopify.
 2. if amazon order id is present, and the page numbers are more than or equal to the order id count, its amazon.
 
+# Refine item name
+Remove unwanted product codes from the item name.
+## Amazon
+Amazon labels typically use specific formats for their identifiers. Knowing what to look for allows you to filter out the descriptive text.
+
+    ASINs (Amazon Standard Identification Numbers): These are 10-character alphanumeric strings starting with "B0" (e.g., B07XJ8C8F1).
+
+    SKUs (Stock Keeping Units): These are merchant-defined, but often follow a consistent internal logic (e.g., DE-WHT-XL-01).
+
+    FNSKUs: These usually start with "X0" (e.g., X002L9K6RB).
+
 # Create sorted summary
 1. Iterates through each page again and extracts the texts and tables in each page.
 2. pages that contains the order id of the detected platform is analyzed to get the product name, variation and quantity.
