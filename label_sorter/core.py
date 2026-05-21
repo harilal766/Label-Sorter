@@ -14,10 +14,11 @@ class LabelSorter:
         self.output_folder = self.input_filepath.replace(".pdf","")
         self.platform = self.find_platform()
         self.misc_filename = "Mixed"
-        # regex patterns for filename sanitization which will be needed for unit testing also
-        self.reserved_pattern = r"[,\/\\\:\*\?\"\<\>]"
+        
+        # regex patterns for filename sanitization which will als be needed for unit testing.
+        self.reserved_characters_pattern = r"[,\/\\\:\*\?\"\<\>]"
         #self.product_codes_pattern = r"\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|" # HSN30049011
-        self.product_codes_pattern = r"B0.*|HSN.*"
+        self.product_codes_pattern = r"B0.*|HSN.*|\s"
         self.another_pattern = r"\s{2}|\n|Shipping Charges|\/|:"
         
     def find_platform(self) -> str:
@@ -63,10 +64,23 @@ class LabelSorter:
             return platform
 
     def sanitize_filename(self,filename):
+        """
+        Removes Reserved characters and product codes from the filename to make it suitable for file naming.
+
+        Args:
+            filename (_type_): filename from the pdf page in string format.
+
+        Raises:
+            TypeError: _description_
+
+        Returns:
+            _type_: filename with unwanted characters removed.
+        """
         try:
-            sanitization_patterns = (self.reserved_pattern,self.product_codes_pattern, self.another_pattern)
+            sanitization_patterns = (self.reserved_characters_pattern,self.product_codes_pattern, self.another_pattern)
             for pattern in sanitization_patterns:
                 filename = re.sub(pattern,"",filename)
+                
             return filename
         except TypeError as te:
             raise TypeError(f"Got {type(filename)} instead of string in sanitized filename")
