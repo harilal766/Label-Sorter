@@ -22,6 +22,12 @@ class LabelSorter:
         self.another_pattern = r"\s{2}|\n|Shipping Charges|\/|:"
         
     def find_platform(self) -> str:
+        """
+        Finding the platform based on the characteristics of the input file.
+
+        Returns:
+            str: Capitalized platform name if found, else None.
+        """
         platform = None
         if os.path.exists(self.input_filepath) == False:
             sys.exit("Input file does not exist....")
@@ -68,13 +74,13 @@ class LabelSorter:
         Removes Reserved characters and product codes from the filename to make it suitable for file naming.
 
         Args:
-            filename (_type_): filename from the pdf page in string format.
+            filename (string): filename from the pdf page.
 
         Raises:
-            TypeError: _description_
+            TypeError: If the filename is not a string.
 
         Returns:
-            _type_: filename with unwanted characters removed.
+            string : filename with unwanted characters removed.
         """
         try:
             sanitization_patterns = (self.reserved_characters_pattern,self.product_codes_pattern, self.another_pattern)
@@ -86,6 +92,15 @@ class LabelSorter:
             raise TypeError(f"Got {type(filename)} instead of string in sanitized filename")
             
     def create_sorted_summary(self):
+        """
+        Adds the product names, variations, the page numbers which consists of it in nested dictionary format. 
+        
+        Raises:
+            AttributeError: _description_
+
+        Returns:
+            dict : dictionary that contains full summary of the input pdf file.
+        """
         page_debrief = None; 
         # summary dictionaries
         summary_dict = {}; chosen_summary_dict = {}
