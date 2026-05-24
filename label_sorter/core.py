@@ -24,6 +24,9 @@ class LabelSorter:
     def find_platform(self) -> str:
         """
         Finding the platform based on the characteristics of the input file.
+        
+        Raises:
+            Raises if no such file exists.
 
         Returns:
             str: Capitalized platform name if found, else None.
