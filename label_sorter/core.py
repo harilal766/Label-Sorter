@@ -77,13 +77,13 @@ class LabelSorter:
         Removes Reserved characters and product codes from the filename to make it suitable for file naming.
 
         Args:
-            filename (string): filename from the pdf page.
+            filename (str): filename from the pdf page.
 
         Raises:
             TypeError: If the filename is not a string.
 
         Returns:
-            string : filename with unwanted characters removed.
+            str : filename with unwanted characters removed.
         """
         try:
             sanitization_patterns = (self.reserved_characters_pattern,self.product_codes_pattern, self.another_pattern)
@@ -182,6 +182,8 @@ class LabelSorter:
                         writer.write(out_pdf)        
             
     def create_sorted_pdf_files(self):
+        """Generates out pdf files by parsing the summary dictionary.
+        """
         summary_dict = self.create_sorted_summary()
         
         #pprint(summary_dict.keys())
@@ -191,27 +193,17 @@ class LabelSorter:
             
         #order_count = None; page_numbers = None
         output_file = None 
-        
         # Create output folder if not created already.
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
             print(f"Created output folder : {self.output_folder}")
-        
-        """
-        # save the summary as a json file to the output folder
-        with open(f"{self.output_folder}/summary.json","w") as summary_json:
-            json.dump(summary_dict, summary_json)
-        """
+
         output_count = 0
         try:
             print(f"Sorted Summary :")
             for sorting_key, value in summary_dict.items():
                 # Assigning output file name and its pages according to order type
                 # single item orders
-                """
-                1. Both normal and mixed orders need different template to create a output pdf name.
-                2. the info needed are : output count, page numbers, quantity per order, pdf name, 
-                """
                 if sorting_key != self.misc_filename:
                     #print(f"Writing Single item order",end=", ")
                     for qty,page_list in value.items():
