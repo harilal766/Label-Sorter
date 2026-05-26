@@ -10,6 +10,20 @@ logging.getLogger('pdfminer').setLevel(logging.ERROR)
 
 class LabelSorter:
     def __init__(self, pdf_path):
+        """
+        Handles the whole sorting operations based on the data provided by the 
+        Label Platform classes.
+        
+        Class variables include:
+
+        * Input filepath and output folder path.
+        * Ecommerce / delivery platform of the labels.
+        * Filename assigned for the miscellaneous orders.
+        * Regex patterns required to remove unwanted product codes and other characters from the output pdf file.
+
+        Args:
+            pdf_path (str): filepath of the pdf file that contains the labels
+        """
         self.input_filepath = pdf_path
         self.output_folder = self.input_filepath.replace(".pdf","")
         self.platform = self.find_platform()
@@ -96,7 +110,8 @@ class LabelSorter:
             
     def create_sorted_summary(self):
         """
-        Adds the product names, variations, the page numbers which consists of it in nested dictionary format. 
+        Adds the product names, variations, the page numbers which consists
+        of it in nested dictionary format. 
         
         Raises:
             AttributeError: _description_
@@ -159,6 +174,13 @@ class LabelSorter:
             return summary_dict
             
     def create_single_pdf_file(self, pdf_name, page_numbers):
+        """create each of the output pdf file based on the page numbers
+        from the input file and the assigned name.
+
+        Args:
+            pdf_name (str): Name of the pdf file
+            page_numbers (_type_): _description_
+        """
         if page_numbers == None:
             sys.exit("Received Nonetype instead of page numbers")
         try:

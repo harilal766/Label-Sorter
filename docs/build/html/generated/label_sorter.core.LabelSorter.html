@@ -14,7 +14,6 @@
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="Label Sorter Class" href="../label_sorter.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -40,16 +39,30 @@
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="label_sorter.core.LabelSorter.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdf_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#label_sorter.core.LabelSorter.__init__" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handles the whole sorting operations based on the data provided by the
+Label Platform classes.</p>
+<p>Class variables include:</p>
+<ul class="simple">
+<li><p>Input filepath and output folder path.</p></li>
+<li><p>Ecommerce / delivery platform of the labels.</p></li>
+<li><p>Filename assigned for the miscellaneous orders.</p></li>
+<li><p>Regex patterns required to remove unwanted product codes and other characters from the output pdf file.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pdf_path</strong> (<em>str</em>) – filepath of the pdf file that contains the labels</p>
+</dd>
+</dl>
+</dd></dl>
 
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#label_sorter.core.LabelSorter.__init__" title="label_sorter.core.LabelSorter.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(pdf_path)</p></td>
-<td><p></p></td>
+<td><p>Handles the whole sorting operations based on the data provided by the Label Platform classes.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_single_pdf_file</span></code>(pdf_name, page_numbers)</p></td>
-<td><p></p></td>
+<td><p>create each of the output pdf file based on the page numbers from the input file and the assigned name.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_sorted_pdf_files</span></code>()</p></td>
 <td><p>Generates out pdf files by parsing the summary dictionary.</p></td>
@@ -96,20 +109,14 @@
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Table Of Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../label_sorter.html">Label Sorter Class</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">label_sorter.core.LabelSorter</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../label_sorter.html">Label Sorter Class</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="../label_sorter.html">Label Sorter Class</a><ul>
-      <li>Previous: <a href="../label_sorter.html" title="previous chapter">Label Sorter Class</a></li>
-  </ul></li>
   </ul></li>
 </ul>
 </div>
