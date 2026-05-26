@@ -12,7 +12,7 @@ Installation
 -------------
 .. code-block:: console
    
-   $ pip install label_sorter
+   $ pip install label-sorter
 
 Usage
 ------
@@ -26,10 +26,6 @@ Usage
    # call the method to create sorted pdf files
    sorter.create_sorted_pdf_files()
 
-Output
-------
-
-
 
 
 
@@ -39,3 +35,4 @@ Output
    :caption: Table Of Contents:
    
    label_sorter
+   base_label
