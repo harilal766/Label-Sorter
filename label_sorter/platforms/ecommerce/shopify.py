@@ -15,7 +15,7 @@ class ShopifyLabel(BaseLabel):
         }
         """
     
-    def analyze_shpy_page(self):
+    def analyze_page(self):
         try:
             #print(page_text)
             id_match = re.findall(self.shopify_order_id_pattern, self.page_text)

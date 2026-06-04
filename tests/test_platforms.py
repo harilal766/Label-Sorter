@@ -24,4 +24,4 @@ class TestAmazon(TestBaseLabel):
     
     @pytest.mark.skip(reason="This test is currently failing due to changes in the PDF structure. Needs to be updated to reflect the new structure.")
     def test_analyze_amzn_page(self):
-        assert self.am_inst.analyze_amzn_page()
+        assert self.am_inst.analyze_page()
