@@ -4,14 +4,15 @@ from .base_label import BaseLabel
 class AmazonLabel(BaseLabel):
     def __init__(self, page_text, page_table,page_num):
         super().__init__(page_text, page_table,page_num)
-        self.amazon_order_id_pattern = r'\d{3}-\d{7}-\d{7}'
+        self.order_id_pattern = r'\d{3}-\d{7}-\d{7}'
         #self.amazon_product_name_pattern = r'\|\s[A-Z\d]+\s\(\s[A-Z\d-]+\s\)(\s|\n)Shipping Charges'
-        self.amazon_product_name_pattern = r'\|\s[A-Z\d]+\s\(\s[A-Z\d-]+\s\)(\s|\n)'
-    
+        self.product_name_pattern = r'\|\s[A-Z\d]+\s\(\s[A-Z\d-]+\s\)(\s|\n)'
+        self.ship_date_pattern = r'\d{2}\.\d{2}\.\d{4}'
+            
     def find_amazon_page_type(self):
         type = None
         try:
-            if re.findall(self.amazon_order_id_pattern,self.page_text):
+            if re.findall(self.order_id_pattern,self.page_text):
                 type = "Invoice"
             else:
                 if re.findall(r'^Tax Invoice/Bill of Supply/Cash Memo',self.page_text):
@@ -23,14 +24,17 @@ class AmazonLabel(BaseLabel):
         else:
             return type
     
-    def analyze_amzn_page(self) -> dict:
+    def analyze_page(self) -> dict:
         page_dict = {}
         try:
             # start of amazon function in the future
             # Ensuring invoice pages
-            order_id_match = re.findall(self.amazon_order_id_pattern,self.page_text)
+            order_id_match = re.findall(self.order_id_pattern,self.page_text)
+            ship_date_match = re.findall(self.ship_date_pattern,self.page_text)
+            
             if self.find_amazon_page_type() == "Invoice":
                 self.page_debrief_dict["order_id"] = order_id_match[0]
+                self.page_debrief_dict["ship_date"] = ship_date_match[0]
                 
                 # Update product rows based on overlapped and normal invoice pages
                 product_table = self.page_table[0]

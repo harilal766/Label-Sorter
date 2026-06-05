@@ -32,7 +32,7 @@ class LabelSorter:
         # regex patterns for filename sanitization which will als be needed for unit testing.
         self.reserved_characters_pattern = r"[,\/\\\:\*\?\"\<\>]"
         #self.product_codes_pattern = r"\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|" # HSN30049011
-        self.product_codes_pattern = r"B0.*|HSN.*|\s"
+        self.product_codes_pattern = r"B0.*|HSN.*|"
         self.another_pattern = r"\s{2}|\n|Shipping Charges|\/|:"
         
     def find_platform(self) -> str:
@@ -64,7 +64,7 @@ class LabelSorter:
                     
                     if re.findall(sh.shopify_order_id_pattern, page_text):
                         shopify_order_id_count += 1
-                    elif re.findall(am.amazon_order_id_pattern, page_text):
+                    elif re.findall(am.order_id_pattern, page_text):
                         amazon_order_id_count += 1
                     
                     platform_instances = {
@@ -130,14 +130,15 @@ class LabelSorter:
                     page_number = page_index+1
                     pages = [page_number-1, page_number] if self.platform == "Amazon" else [page_number]
                     debriefs = {
-                        "Shopify" : ShopifyLabel(page_text=page_text, page_table=page_table,page_num=page_number).analyze_shpy_page(),
-                        "Amazon" : AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number).analyze_amzn_page(),
+                        "Shopify" : ShopifyLabel(page_text=page_text, page_table=page_table,page_num=page_number).analyze_page(),
+                        "Amazon" : AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number).analyze_page(),
                     }
                     
                     page_debrief = debriefs.get(self.platform,None)  
                     if page_debrief.get("order_id",None):
                         order_id = page_debrief.get("order_id",None)
                         items_list = page_debrief.get("items",None)
+                        ship_date = page_debrief.get("ship_date",None)
                         for item_dict in items_list:
                             item_count = len(items_list)
                             if item_count == 1:
@@ -156,7 +157,9 @@ class LabelSorter:
                             # getting a clean item name
                             
                             item_name = self.sanitize_filename(filename=item_name)
-                            print(item_name)
+                            
+                            
+                            print(f"{ship_date}- {order_id} -  {item_name} - {item_count}")
                             item_qty = item_dict["qty"]
                             # give dedicated dict for each item name.
                             if not item_name in chosen_summary_dict.keys():
