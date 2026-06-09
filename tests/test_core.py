@@ -24,8 +24,13 @@ class Test_LabelSorter:
         sanitized = self.label_inst.sanitize_filename(unsanitized_name)
         assert sanitized == sanitized_name
 
-    def test_output_files(self):
+    def test_create_sorted_pdf_files(self):
         """
         Check output filenames and make sure the numbering is in correct order, mixed file have number as well.
         all the files except the summary.json should have .pdf extension
         """
+        summary_keys = self.label_inst.create_sorted_summary()
+        created_files = None
+        
+        assert summary_keys
+        

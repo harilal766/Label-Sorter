@@ -32,7 +32,7 @@ class LabelSorter:
         # regex patterns for filename sanitization which will als be needed for unit testing.
         self.reserved_characters_pattern = r"[,\/\\\:\*\?\"\<\>]"
         #self.product_codes_pattern = r"\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|" # HSN30049011
-        self.product_codes_pattern = r"B0.*|HSN.*|"
+        self.product_codes_pattern = r"B0.*|HSN.*|\s\w{1,2}\d*-.*"
         self.another_pattern = r"\s{2}|\n|Shipping Charges|\/|:"
         
     def find_platform(self) -> str:
@@ -88,7 +88,8 @@ class LabelSorter:
 
     def sanitize_filename(self,filename):
         """
-        Removes Reserved characters and product codes from the filename to make it suitable for file naming.
+        Removes Reserved characters and product codes from the filename to 
+        make it suitable for file naming.
 
         Args:
             filename (str): filename from the pdf page.
