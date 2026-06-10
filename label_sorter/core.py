@@ -35,6 +35,16 @@ class LabelSorter:
         self.product_codes_pattern = r"B0.*|HSN.*|\s\w{1,2}\d*-.*"
         self.another_pattern = r"\s{2}|\n|Shipping Charges|\/|:"
         
+    def convert_to_ocr(self):
+        """Converts the scanned image pages to ocr friendly.
+        Raises:
+            FileNotFoundError: _description_
+        """
+        try:
+            pass
+        except FileNotFoundError:
+            raise FileNotFoundError("File Not available")
+        
     def find_platform(self) -> str:
         """
         Finding the platform based on the characteristics of the input file.
@@ -81,8 +91,6 @@ class LabelSorter:
             
         except FileNotFoundError:
             print(f"The file {self.input_filepath} does not exist.")
-        except Exception as e:
-            print(e)
         else:
             return platform
 
