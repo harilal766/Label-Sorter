@@ -1,7 +1,7 @@
 import pdfplumber, re, os,sys, logging, json
 from pypdf import PdfReader, PdfWriter
 from pprint import pprint
-from label_sorter.platforms.ecommerce.base_label import BaseLabel
+from label_sorter.platforms.base_label import BaseLabel
 from label_sorter.platforms.ecommerce.shopify import ShopifyLabel
 from label_sorter.platforms.ecommerce.amazon import AmazonLabel
 

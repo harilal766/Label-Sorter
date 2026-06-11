@@ -1,9 +1,7 @@
-
-
 class BaseLabel:
     def __init__(self, page_text, page_table, page_num = None):
         """
-        Handles the common characteristics of an Ecommerce label, whic are :
+        Handles the common characteristics of an Ecommerce label, which are :
 
         Args:
             page_text (str): texts in a page

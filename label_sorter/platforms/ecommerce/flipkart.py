@@ -1,5 +1,5 @@
 import re
-from .base_label import BaseLabel
+from ..base_label import BaseLabel
 
 class FlipkartLabel(BaseLabel):
     def __init__(self, page_text, page_table, page_num):

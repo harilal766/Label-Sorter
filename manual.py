@@ -1,4 +1,4 @@
-from label_sorter.core import LabelSorter
+from label_sorter.sorter import LabelSorter
 
 
 

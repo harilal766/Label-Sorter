@@ -1,9 +1,8 @@
 import sys, os, pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from filepaths import *
-from label_sorter.core import LabelSorter
-
+from tests.test_filepaths import *
+from label_sorter.sorter import LabelSorter
 
 class Test_LabelSorter:
     label_inst = LabelSorter(pdf_path=amazon_pdf)

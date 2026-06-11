@@ -1,7 +1,9 @@
-from label_sorter.platforms.ecommerce.base_label import BaseLabel
+from tests.test_core import Test_LabelSorter
+
+from label_sorter.platforms.base_label import BaseLabel
 from label_sorter.platforms.ecommerce.amazon import AmazonLabel
 from tests.test_core import Test_LabelSorter
-from tests.filepaths import amazon_pdf
+from tests.test_filepaths import amazon_pdf
 
 import pdfplumber, pytest
 
