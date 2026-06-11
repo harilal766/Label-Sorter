@@ -70,8 +70,7 @@ class LabelSorter:
                 }
             }
             with pdfplumber.open(self.input_filepath) as pdf_file:
-                total_pages = 0; amazon_count = 0 
-                shopify_order_id_count, amazon_order_id_count, flipkart_order_count = 0, 0, 0
+                total_pages = 0; 
                 for page_index, page in enumerate(pdf_file.pages):
                     total_pages += 1
                     page_text = page.extract_text(); page_tables = page.extract_tables()
@@ -82,16 +81,11 @@ class LabelSorter:
                         if order_id_match:
                             datas["order_id_count"] += 1
                     
-            print(platform_data)
-            """
-                if total_pages == shopify_order_id_count:
-                    platform = "Shopify"
+            if total_pages == platform_data["Shopify"]["order_id_count"]:
+                platform = "Shopify"
                 # this condition is not complete, need to add overlap page detection
-                elif amazon_order_id_count > 0:
-                    platform = "Amazon"
-                elif total_pages == 2*flipkart_order_count:
-                    platform = "Flipkart"
-            """
+            elif platform_data["Amazon"]["order_id_count"] > 0:
+                platform = "Amazon"
             
         except FileNotFoundError:
             print(f"The file {self.input_filepath} does not exist.")
