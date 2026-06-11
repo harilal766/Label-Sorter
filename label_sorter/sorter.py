@@ -75,7 +75,7 @@ class LabelSorter:
                     total_pages += 1
                     page_text = page.extract_text(); page_tables = page.extract_tables()
                     for platform,datas in platform_data.items():
-                        order_id_match = re.findall(
+                        order_id_match = re.match(
                             datas["order_id_pattern"],page_text
                         )
                         if order_id_match:
@@ -83,7 +83,7 @@ class LabelSorter:
                     
             if total_pages == platform_data["Shopify"]["order_id_count"]:
                 platform = "Shopify"
-                # this condition is not complete, need to add overlap page detection
+                # this condition is not complete, need more stricter verification
             elif platform_data["Amazon"]["order_id_count"] > 0:
                 platform = "Amazon"
             
