@@ -2,9 +2,9 @@ import re
 from ..base_label import BaseLabel
 
 class ShopifyLabel(BaseLabel):
+    ORDER_ID_PATTERN = r'#\d{4,5}'
     def __init__(self, page_text, page_table,page_num):
         super().__init__(page_text, page_table,page_num)
-        self.shopify_order_id_pattern = r'#\d{4,5}'
         self.product_name_pattern = r'ITEMS QUANTITY\n(.*)\nThank you for shopping with us'
         self.qty_pattern = r'(\d+)\sof\s\d+'
         

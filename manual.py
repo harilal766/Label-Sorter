@@ -3,7 +3,8 @@ from label_sorter.sorter import LabelSorter
 
 
 sorter = LabelSorter(
-    pdf_path = input("Enter filepath : ")
+    pdf_path = "/mnt/hdd/projects/Label-Sorter/test_labels/shopify.pdf"
 )
 
-sorter.create_sorted_pdf_files()
+platform = sorter.find_platform()
+print(platform)

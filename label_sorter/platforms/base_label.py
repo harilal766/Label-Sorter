@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
+import re
+
+
 class BaseLabel:
-    
     ORDER_ID_PATTERN : str | None = None
     TRACKING_ID_PATTERN : str | None = None
     
@@ -14,18 +16,39 @@ class BaseLabel:
         3. page text
         4. page table
         5. page number
-        
-        The 2 and 4 are usually common in all pdf files, so we need to find out what seperate them from a label pdf. 
 
         Args:
             page_text (str): texts in a page
             page_table (_type_): Tables in a page
             page_num (int, optional): Page number. Defaults to None.
         """
-        self.page_debrief_dict = {
-            "order_id" : None, "items" : []
-        }
         self.page_text = page_text
         self.page_table = page_table
         self.page_number = page_num
-    
+        
+        self.order_id: str | None = None
+        self.tracking_id: str | None = None
+        self.items: list = []
+        
+    def extract_order_id(self):
+        if not self.ORDER_ID_PATTERN:
+            raise NotImplementedError("Setup the subclass before doing this.")
+        id_match = re.match(self.ORDER_ID_PATTERN,self.page_text)
+        
+        if id_match:
+            return id_match.group()
+        else:
+            return None
+        
+    def extract_tracking_id(self):
+        if not self.TRACKING_ID_PATTERN:
+            raise NotImplementedError("Setup the subclass before doing this.")
+        id_match = re.match(self.TRACKING_ID_PATTERN,self.page_text)
+        
+        if id_match:
+            return id_match.group()
+        else:
+            return None
+        
+    def get_page_summary():
+        pass

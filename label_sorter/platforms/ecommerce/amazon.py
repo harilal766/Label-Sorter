@@ -2,9 +2,11 @@ import re
 from ..base_label import BaseLabel
 
 class AmazonLabel(BaseLabel):
+    ORDER_ID_PATTERN = r'\d{3}-\d{7}-\d{7}'
+    TRACKING_ID_PATTERN = r'AWB#*\s\d{12}'
+    
     def __init__(self, page_text, page_table,page_num):
         super().__init__(page_text, page_table,page_num)
-        self.order_id_pattern = r'\d{3}-\d{7}-\d{7}'
         #self.amazon_product_name_pattern = r'\|\s[A-Z\d]+\s\(\s[A-Z\d-]+\s\)(\s|\n)Shipping Charges'
         self.product_name_pattern = r'\|\s[A-Z\d]+\s\(\s[A-Z\d-]+\s\)(\s|\n)'
         self.ship_date_pattern = r'\d{2}\.\d{2}\.\d{4}'
@@ -33,8 +35,8 @@ class AmazonLabel(BaseLabel):
             ship_date_match = re.findall(self.ship_date_pattern,self.page_text)
             
             if self.find_amazon_page_type() == "Invoice":
-                self.page_debrief_dict["order_id"] = order_id_match[0]
-                self.page_debrief_dict["ship_date"] = ship_date_match[0]
+                self.order_id = order_id_match[0]
+                #self.page_debrief_dict["ship_date"] = ship_date_match[0]
                 
                 # Update product rows based on overlapped and normal invoice pages
                 product_table = self.page_table[0]
@@ -47,7 +49,7 @@ class AmazonLabel(BaseLabel):
                     page_dict = {"item_name" : prod_name, "qty" : prod_qty}
 
                     if page_dict["item_name"] != None:
-                        self.page_debrief_dict["items"].append(page_dict)
+                        self.items.append(page_dict)
         except Exception as e:
             print(e)
         else:

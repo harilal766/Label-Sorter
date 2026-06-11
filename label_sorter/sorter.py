@@ -57,30 +57,33 @@ class LabelSorter:
         """
         platform = None
         if os.path.exists(self.input_filepath) == False:
-            sys.exit("Input file does not exist....")
+            raise FileNotFoundError("Input file does not exist....")
         try:
+            platform_data = {
+                "Amazon" : {
+                    "order_id_pattern" : AmazonLabel.ORDER_ID_PATTERN,
+                    "order_id_count" : 0
+                },
+                "Shopify" : {
+                    "order_id_pattern" : ShopifyLabel.ORDER_ID_PATTERN,
+                    "order_id_count" : 0
+                }
+            }
             with pdfplumber.open(self.input_filepath) as pdf_file:
                 total_pages = 0; amazon_count = 0 
-                
                 shopify_order_id_count, amazon_order_id_count, flipkart_order_count = 0, 0, 0
-                
                 for page_index, page in enumerate(pdf_file.pages):
                     total_pages += 1
                     page_text = page.extract_text(); page_tables = page.extract_tables()
+                    for platform,datas in platform_data.items():
+                        order_id_match = re.findall(
+                            datas["order_id_pattern"],page_text
+                        )
+                        if order_id_match:
+                            datas["order_id_count"] += 1
                     
-                    # Shopify Initializations
-                    sh = ShopifyLabel(page_text=page_text, page_table=page_tables,page_num=0)
-                    am = AmazonLabel(page_text=page_text, page_table=page_tables,page_num=0)
-                    
-                    if re.findall(sh.shopify_order_id_pattern, page_text):
-                        shopify_order_id_count += 1
-                    elif re.findall(am.order_id_pattern, page_text):
-                        amazon_order_id_count += 1
-                    
-                    platform_instances = {
-                        "Amazon" : AmazonLabel(page_text=page_text, page_table=page_tables,page_num=0)
-                    }    
-                    
+            print(platform_data)
+            """
                 if total_pages == shopify_order_id_count:
                     platform = "Shopify"
                 # this condition is not complete, need to add overlap page detection
@@ -88,6 +91,7 @@ class LabelSorter:
                     platform = "Amazon"
                 elif total_pages == 2*flipkart_order_count:
                     platform = "Flipkart"
+            """
             
         except FileNotFoundError:
             print(f"The file {self.input_filepath} does not exist.")
