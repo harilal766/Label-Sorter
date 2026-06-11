@@ -1,7 +1,21 @@
+from abc import ABC, abstractmethod
 class BaseLabel:
-    def __init__(self, page_text, page_table, page_num = None):
+    
+    ORDER_ID_PATTERN : str | None = None
+    TRACKING_ID_PATTERN : str | None = None
+    
+    def __init__(self, page_text : str, page_table, page_num: int = None):
         """
-        Handles the common characteristics of an Ecommerce label, which are :
+        This is where all the common characteristics of a label should start.
+        
+        Common characteristics
+        1. order id
+        2. tracking id
+        3. page text
+        4. page table
+        5. page number
+        
+        The 2 and 4 are usually common in all pdf files, so we need to find out what seperate them from a label pdf. 
 
         Args:
             page_text (str): texts in a page
