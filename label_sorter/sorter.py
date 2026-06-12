@@ -45,6 +45,7 @@ class LabelSorter:
         except FileNotFoundError:
             raise FileNotFoundError("File Not available")
         
+        
     def find_platform(self) -> str:
         """
         Finding the platform based on the characteristics of the input file.
@@ -80,9 +81,8 @@ class LabelSorter:
                         )
                         if order_id_match:
                             datas["order_id_count"] += 1
-                    
-                    
-            print(platform_data)
+                            
+                            
             if total_pages == platform_data["Shopify"]["order_id_count"]:
                 platform = "Shopify"
                 # this condition is not complete, need more stricter verification
@@ -185,7 +185,7 @@ class LabelSorter:
         else:
             return summary_dict
             
-    def create_single_pdf_file(self, pdf_name, page_numbers):
+    def create_pdf_file(self, pdf_name, page_numbers):
         """create each of the output pdf file based on the page numbers
         from the input file and the assigned name.
 
@@ -243,12 +243,12 @@ class LabelSorter:
                     for qty,page_list in value.items():
                         output_count += 1
                         #print(f"Detected more than one qty.")
-                        self.create_single_pdf_file(
+                        self.create_pdf_file(
                             pdf_name = f"{output_count} - {sorting_key} - {qty}", page_numbers=page_list
                         )
                 else:
                     output_count += 1
-                    self.create_single_pdf_file(
+                    self.create_pdf_file(
                         pdf_name = f"{output_count} - {self.misc_filename}", page_numbers= value.get("pages",None)
                     )
         except Exception as e:

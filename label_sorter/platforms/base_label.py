@@ -32,18 +32,34 @@ class BaseLabel:
         self.tracking_id: str | None = None
         self.items: list = []
         
-    def extract_id(self):
-        if not self.ORDER_ID_PATTERN:
-            raise NotImplementedError("Setup the subclass before doing this.")
-        id_match = re.match(self.ORDER_ID_PATTERN,self.page_text)
+    def extract_id(self,pattern_type:str):
+        pattern_types = {
+            "order" : self.ORDER_ID_PATTERN,
+            "tracking" : self.TRACKING_ID_PATTERN
+        }
+        selected_pattern = pattern_types[pattern_type]
+        try:
+            if not selected_pattern:
+                raise NotImplementedError("Setup the subclass before doing this.")
+            id_match = re.findall(selected_pattern,self.page_text)
+            
+            if id_match:
+                return id_match[-1]
+            else:
+                return None
+        except KeyError:
+            raise KeyError("The pattern type provided is not available")
         
-        if id_match:
-            return id_match.group()
-        else:
-            return None
-        
-    def find_page_type(self):
+    def get_pagetype(self):
         pass
         
     def get_page_summary(self):
-        pass
+        basic_page_summary = {
+            "page_number" : self.page_number,
+            "page_text" : self.page_text,
+            "page_table" : self.page_table,
+            
+            "order_id" : self.order_id,
+            "items" : self.items
+        }
+        return basic_page_summary 

@@ -15,7 +15,7 @@ class ShopifyLabel(BaseLabel):
         }
         """
         
-    def find_page_type(self):
+    def get_pagetype(self):
         pass
     
     def get_page_summary(self):

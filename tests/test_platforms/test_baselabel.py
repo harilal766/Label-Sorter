@@ -1,7 +1,12 @@
-from tests.test_sorter import Test_LabelSorter
+from tests.test_filepaths import amazon_pdf
 
+from label_sorter.platforms.base_label import BaseLabel
+import pdfplumber
 
-class TestBaseLabel(Test_LabelSorter):
-    pass
+class TestBaseLabel():
+    def setUp(self):
+        pass
+    def test_extract_id(self):
+        pass
 
     
