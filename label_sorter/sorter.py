@@ -75,12 +75,14 @@ class LabelSorter:
                     total_pages += 1
                     page_text = page.extract_text(); page_tables = page.extract_tables()
                     for platform,datas in platform_data.items():
-                        order_id_match = re.match(
+                        order_id_match = re.findall(
                             datas["order_id_pattern"],page_text
                         )
                         if order_id_match:
                             datas["order_id_count"] += 1
                     
+                    
+            print(platform_data)
             if total_pages == platform_data["Shopify"]["order_id_count"]:
                 platform = "Shopify"
                 # this condition is not complete, need more stricter verification
