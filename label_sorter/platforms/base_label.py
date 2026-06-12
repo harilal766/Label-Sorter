@@ -6,7 +6,9 @@ class BaseLabel:
     ORDER_ID_PATTERN : str | None = None
     TRACKING_ID_PATTERN : str | None = None
     
-    def __init__(self, page_text : str, page_table, page_num: int = None):
+    PAGE_TYPES : tuple | None = None
+    
+    def __init__(self, page_text : str, page_table : list = None, page_num: int = None):
         """
         This is where all the common characteristics of a label should start.
         
@@ -30,7 +32,7 @@ class BaseLabel:
         self.tracking_id: str | None = None
         self.items: list = []
         
-    def extract_order_id(self):
+    def extract_id(self):
         if not self.ORDER_ID_PATTERN:
             raise NotImplementedError("Setup the subclass before doing this.")
         id_match = re.match(self.ORDER_ID_PATTERN,self.page_text)
@@ -40,15 +42,8 @@ class BaseLabel:
         else:
             return None
         
-    def extract_tracking_id(self):
-        if not self.TRACKING_ID_PATTERN:
-            raise NotImplementedError("Setup the subclass before doing this.")
-        id_match = re.match(self.TRACKING_ID_PATTERN,self.page_text)
+    def find_page_type(self):
+        pass
         
-        if id_match:
-            return id_match.group()
-        else:
-            return None
-        
-    def get_page_summary():
+    def get_page_summary(self):
         pass

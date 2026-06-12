@@ -138,12 +138,12 @@ class LabelSorter:
                     page_text = page.extract_text(); page_table = page.extract_tables()
                     page_number = page_index+1
                     pages = [page_number-1, page_number] if self.platform == "Amazon" else [page_number]
-                    debriefs = {
-                        "Shopify" : ShopifyLabel(page_text=page_text, page_table=page_table,page_num=page_number).analyze_page(),
-                        "Amazon" : AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number).analyze_page(),
+                    page_data = {
+                        "Shopify" : ShopifyLabel(page_text=page_text, page_table=page_table,page_num=page_number).get_page_summary(),
+                        "Amazon" : AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number).get_page_summary(),
                     }
                     
-                    page_debrief = debriefs.get(self.platform,None)  
+                    page_debrief = page_data.get(self.platform,None)  
                     if page_debrief.get("order_id",None):
                         order_id = page_debrief.get("order_id",None)
                         items_list = page_debrief.get("items",None)

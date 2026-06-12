@@ -14,8 +14,11 @@ class ShopifyLabel(BaseLabel):
             "order_id" : None, "sorting_key" : None, "qty" : None
         }
         """
+        
+    def find_page_type(self):
+        pass
     
-    def analyze_page(self):
+    def get_page_summary(self):
         try:
             #print(page_text)
             id_match = re.findall(self.shopify_order_id_pattern, self.page_text)
