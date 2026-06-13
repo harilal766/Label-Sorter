@@ -24,13 +24,13 @@ class BaseLabel:
             page_table (_type_): Tables in a page
             page_num (int, optional): Page number. Defaults to None.
         """
-        self.page_text = page_text
-        self.page_table = page_table
-        self.page_number = page_num
+        self.label_page_text = page_text
+        self.label_page_table = page_table
+        self.label_page_number = page_num
         
         self.order_id: str | None = None
         self.tracking_id: str | None = None
-        self.items: list = []
+        self.label_items: list = []
         
     def extract_id(self,pattern_type:str):
         pattern_types = {
@@ -41,7 +41,7 @@ class BaseLabel:
         try:
             if not selected_pattern:
                 raise NotImplementedError("Setup the subclass before doing this.")
-            id_match = re.findall(selected_pattern,self.page_text)
+            id_match = re.findall(selected_pattern,self.label_page_text)
             
             if id_match:
                 return id_match[-1]
@@ -56,10 +56,10 @@ class BaseLabel:
     def get_page_summary(self):
         pass
         basic_page_summary = {
-            "page_number" : self.page_number,
-            "page_text" : self.page_text,
-            "page_table" : self.page_table,
+            "page_number" : self.label_page_number,
+            "page_text" : self.label_page_text,
+            "page_table" : self.label_page_table,
             
             "order_id" : self.order_id,
-            "items" : self.items
+            "items" : self.label_items
         }

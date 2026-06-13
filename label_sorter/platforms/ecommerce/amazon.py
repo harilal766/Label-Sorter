@@ -16,10 +16,10 @@ class AmazonLabel(BaseLabel):
     def get_pagetype(self):
         type = None
         try:
-            if re.findall(self.ORDER_ID_PATTERN,self.page_text):
+            if re.findall(self.ORDER_ID_PATTERN,self.label_page_text):
                 type = self.PAGE_TYPES[1]
             else:
-                if re.findall(r'^Tax Invoice/Bill of Supply/Cash Memo',self.page_text):
+                if re.findall(r'^Tax Invoice/Bill of Supply/Cash Memo',self.label_page_text):
                     type = self.PAGE_TYPES[2]
                 else:
                     type = self.PAGE_TYPES[0]
@@ -29,6 +29,14 @@ class AmazonLabel(BaseLabel):
             return type
     
     def get_page_summary(self) -> dict:
+        """Reads the items table in the invoice page  
+
+        Raises:
+            AttributeError: _description_
+
+        Returns:
+            dict: _description_
+        """
         try:
             # start of amazon function in the future
             # Ensuring invoice pages
@@ -37,14 +45,13 @@ class AmazonLabel(BaseLabel):
             if self.get_pagetype() == self.PAGE_TYPES[1]:
                 self.order_id = self.extract_id("order")
                 # Update product rows based on overlapped and normal invoice pages
-                
-                for row in self.page_table[1:]:
-                    serial_number_cell = str(row[0])
-                    if serial_number_cell.isnumeric() == True:
-                        prodname = row[1]; prod_qty = row[3]
-                        self.items.append(
-                            { "name" : prodname, "qty" : prod_qty }
+                for row in self.label_page_table[0]:
+                    serial_number_cell = row[0]
+                    if serial_number_cell.isnumeric():
+                        self.label_items.append(
+                            {"name":row[1], "qty":row[3]}
                         )
+                
         except AttributeError:
             raise AttributeError("Check type of the table column")
         

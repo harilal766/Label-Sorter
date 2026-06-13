@@ -3,9 +3,12 @@ from label_sorter.sorter import LabelSorter
 
 
 sorter = LabelSorter(
-    pdf_path = "/mnt/hdd/projects/Label-Sorter/test_labels/amazon.pdf"
+    pdf_path = "/home/hari/Desktop/Projects/Label-Sorter/test_labels/amazon.pdf"
 )
 
 
 platform = sorter.find_platform()
 print(sorter.input_filepath,platform)
+
+sorter.create_sorted_pdf_files()
+

@@ -21,9 +21,9 @@ class ShopifyLabel(BaseLabel):
     def get_page_summary(self):
         try:
             #print(page_text)
-            id_match = re.findall(self.shopify_order_id_pattern, self.page_text)
+            id_match = re.findall(self.shopify_order_id_pattern, self.label_page_text)
             
-            prod_desc_match = re.findall(self.product_name_pattern, self.page_text,flags=re.DOTALL)
+            prod_desc_match = re.findall(self.product_name_pattern, self.label_page_text,flags=re.DOTALL)
             if id_match:
                 self.page_debrief_dict["order_id"] = id_match[0]
             

@@ -94,7 +94,7 @@ class LabelSorter:
         else:
             return platform
 
-    def sanitize_filename(self,filename):
+    def sanitize_filename(self,filename:str):
         """
         Removes Reserved characters and product codes from the filename to 
         make it suitable for file naming.
@@ -153,10 +153,8 @@ class LabelSorter:
                     if label_instance != None:
                         label_instance.get_page_summary()
                         
-                        print("Items", label_instance.order_id,label_instance.items)
-                        
-                        for item_dict in label_instance.items:
-                            item_count = len(label_instance.items)
+                        for item_dict in label_instance.label_items:
+                            item_count = len(label_instance.label_items)
                             if item_count == 1:
                                 chosen_summary_dict = summary_dict
                             elif item_count > 1:
@@ -169,7 +167,7 @@ class LabelSorter:
                                     if not mixed_page in summary_dict[self.misc_filename]["pages"]: 
                                         summary_dict[self.misc_filename]["pages"].append(mixed_page)
                                         
-                            item_name = item_dict.get("item_name",None)
+                            item_name = item_dict.get("name",None)
                             # getting a clean item name
                             
                             item_name = self.sanitize_filename(filename=item_name)
@@ -186,8 +184,6 @@ class LabelSorter:
                             chosen_summary_dict[item_name][item_qty] += pages if item_count == 1 else 1
         except AttributeError as ae:
             raise AttributeError(f"Attribute issues found at summary dictionary : \n {ae}")
-        except Exception as e:
-            print(e)
         else:
             return summary_dict
             
