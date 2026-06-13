@@ -1,10 +1,10 @@
 import re
-from .base_label import BaseLabel
+from ..base_label import BaseLabel
 
 class ShopifyLabel(BaseLabel):
+    ORDER_ID_PATTERN = r'Order\s(#|\w*)\d{4,5}(\w*)*'
     def __init__(self, page_text, page_table,page_num):
         super().__init__(page_text, page_table,page_num)
-        self.shopify_order_id_pattern = r'#\d{4,5}'
         self.product_name_pattern = r'ITEMS QUANTITY\n(.*)\nThank you for shopping with us'
         self.qty_pattern = r'(\d+)\sof\s\d+'
         
@@ -14,8 +14,11 @@ class ShopifyLabel(BaseLabel):
             "order_id" : None, "sorting_key" : None, "qty" : None
         }
         """
+        
+    def get_pagetype(self):
+        pass
     
-    def analyze_page(self):
+    def get_page_summary(self):
         try:
             #print(page_text)
             id_match = re.findall(self.shopify_order_id_pattern, self.page_text)
