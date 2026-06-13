@@ -8,7 +8,7 @@ from tests.test_platforms.test_baselabel import TestBaseLabel
 import pdfplumber, pytest
 
 
-
+from pprint import pprint
 
 
 class TestAmazon(TestBaseLabel):
@@ -29,5 +29,4 @@ class TestAmazon(TestBaseLabel):
         
     def test_get_page_summary(self):
         summary = self.am_inst.get_page_summary()
-        assert summary
-        assert summary["items"]
+        assert len(summary["items"]) > 0
