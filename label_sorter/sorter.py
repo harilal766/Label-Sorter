@@ -128,7 +128,7 @@ class LabelSorter:
         Returns:
             dict : dictionary that contains full summary of the input pdf file.
         """
-        page_debrief = None; 
+        page_summary = None; 
         # summary dictionaries
         summary_dict = {}; chosen_summary_dict = {}
         pages_list = None
@@ -139,17 +139,24 @@ class LabelSorter:
                     page_number = page_index+1
                     pages = [page_number-1, page_number] if self.platform == "Amazon" else [page_number]
                     page_data = {
-                        "Shopify" : ShopifyLabel(page_text=page_text, page_table=page_table,page_num=page_number).get_page_summary(),
-                        "Amazon" : AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number).get_page_summary(),
+                        "Shopify" : ShopifyLabel(page_text=page_text, page_table=page_table,page_num=page_number),
+                        "Amazon" : AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number),
                     }
                     
-                    page_debrief = page_data.get(self.platform,None)  
-                    if page_debrief.get("order_id",None):
-                        order_id = page_debrief.get("order_id",None)
-                        items_list = page_debrief.get("items",None)
-                        ship_date = page_debrief.get("ship_date",None)
-                        for item_dict in items_list:
-                            item_count = len(items_list)
+                    if self.platform == "Shopify":
+                        label_instance = ShopifyLabel(page_text=page_text, page_table=page_table,page_num=page_number)
+                    elif self.platform == "Amazon":
+                        label_instance = AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number)
+                    
+                    #label_instance = page_data.get(self.platform,None)
+                    
+                    if label_instance != None:
+                        label_instance.get_page_summary()
+                        
+                        print("Items", label_instance.order_id,label_instance.items)
+                        
+                        for item_dict in label_instance.items:
+                            item_count = len(label_instance.items)
                             if item_count == 1:
                                 chosen_summary_dict = summary_dict
                             elif item_count > 1:
@@ -167,8 +174,7 @@ class LabelSorter:
                             
                             item_name = self.sanitize_filename(filename=item_name)
                             
-                            
-                            print(f"{ship_date}- {order_id} -  {item_name} - {item_count}")
+                            print(f"{label_instance.order_id} -  {item_name} - {item_count}")
                             item_qty = item_dict["qty"]
                             # give dedicated dict for each item name.
                             if not item_name in chosen_summary_dict.keys():

@@ -54,6 +54,7 @@ class BaseLabel:
         pass
         
     def get_page_summary(self):
+        pass
         basic_page_summary = {
             "page_number" : self.page_number,
             "page_text" : self.page_text,
@@ -62,4 +63,3 @@ class BaseLabel:
             "order_id" : self.order_id,
             "items" : self.items
         }
-        return basic_page_summary 

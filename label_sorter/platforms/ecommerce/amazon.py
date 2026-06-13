@@ -38,13 +38,13 @@ class AmazonLabel(BaseLabel):
                 self.order_id = self.extract_id("order")
                 # Update product rows based on overlapped and normal invoice pages
                 
-                for row in self.page_table:
-                    if row[0].isnumeric():
+                for row in self.page_table[1:]:
+                    serial_number_cell = str(row[0])
+                    if serial_number_cell.isnumeric() == True:
                         prodname = row[1]; prod_qty = row[3]
                         self.items.append(
                             { "name" : prodname, "qty" : prod_qty }
                         )
-        except Exception as e:
-            print(e)
-        else:
-            return super().get_page_summary()
+        except AttributeError:
+            raise AttributeError("Check type of the table column")
+        

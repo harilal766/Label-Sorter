@@ -15,7 +15,7 @@ class TestAmazon(TestBaseLabel):
     pdf = pdfplumber.open(amazon_pdf)
     pages = pdf.pages
     
-    testing_index = 11 ; test_page = pages[testing_index]
+    testing_index = 1 ; test_page = pages[testing_index]
     am_inst = AmazonLabel(
         page_text= test_page.extract_text(), page_table=test_page.extract_table(),
         page_num= testing_index+1
@@ -28,5 +28,7 @@ class TestAmazon(TestBaseLabel):
         assert self.am_inst.get_pagetype() == self.am_inst.PAGE_TYPES[1]
         
     def test_get_page_summary(self):
-        summary = self.am_inst.get_page_summary()
-        assert len(summary["items"]) > 0
+        self.am_inst.get_page_summary()
+        assert self.am_inst.order_id
+        print(self.am_inst.items)
+        assert len(self.am_inst.items) > 0
