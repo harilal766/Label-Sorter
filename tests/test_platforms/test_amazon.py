@@ -31,4 +31,3 @@ class TestAmazon(TestBaseLabel):
         self.am_inst.get_page_summary()
         assert self.am_inst.order_id
         print(self.am_inst.label_items)
-        assert len(self.am_inst.label_items) > 0

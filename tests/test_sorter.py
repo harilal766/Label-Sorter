@@ -5,7 +5,7 @@ from tests.test_filepaths import *
 from label_sorter.sorter import LabelSorter
 
 class Test_LabelSorter:
-    label_inst = LabelSorter(pdf_path=amazon_pdf)
+    sorter_inst = LabelSorter(pdf_path=amazon_pdf)
     files = {
         "Shopify" : shopify_pdf,
         "Amazon" : amazon_pdf
@@ -16,20 +16,23 @@ class Test_LabelSorter:
             if filename.endswith('.pdf') and os.path.exists(filename):
                 inst = LabelSorter(pdf_path=filename)
                 assert platform == inst.find_platform()
-"""  
+
     def test_create_sorted_summary(self):
-        sorted_summary = self.label_inst.create_sorted_summary()
+        sorted_summary = self.sorter_inst.create_sorting_summary()
         print(sorted_summary)
         assert sorted_summary.keys
 
     def test_sanitize_filename(self):
-        sanitized = self.label_inst.sanitize_filename(unsanitized_name)
+        sanitized = self.sorter_inst.sanitize_filename(unsanitized_name)
         assert sanitized == sanitized_name
 
     def test_create_sorted_pdf_files(self):
-        summary_keys = self.label_inst.create_sorted_summary()
-        created_files = None
+        """
+        find the pdf filename, and search for the folder in its name.
+        
+        """
+        summary_keys = self.sorter_inst.create_sorting_summary()
+        created_files = os.listdir(self.sorter_inst.output_folder)
         
         assert summary_keys
         
-    """

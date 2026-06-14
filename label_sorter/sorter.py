@@ -117,7 +117,7 @@ class LabelSorter:
         except TypeError as te:
             raise TypeError(f"Got {type(filename)} instead of string in sanitized filename")
             
-    def create_sorted_summary(self):
+    def create_sorting_summary(self):
         """
         Adds the product names, variations, the page numbers which consists
         of it in nested dictionary format. 
@@ -220,7 +220,7 @@ class LabelSorter:
     def create_sorted_pdf_files(self):
         """Generates out pdf files by parsing the summary dictionary.
         """
-        summary_dict = self.create_sorted_summary()
+        summary_dict = self.create_sorting_summary()
         
         #pprint(summary_dict.keys())
         
