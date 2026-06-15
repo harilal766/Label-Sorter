@@ -1,9 +1,9 @@
 from label_sorter.sorter import LabelSorter
-
+from tests.test_filepaths import amazon_pdf
 
 
 sorter = LabelSorter(
-    pdf_path = "/home/hari/Desktop/Projects/Label-Sorter/test_labels/amazon.pdf"
+    pdf_path = amazon_pdf
 )
 
 

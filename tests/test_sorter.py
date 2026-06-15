@@ -1,4 +1,4 @@
-import sys, os, pytest
+import sys, os, pytest, re
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from tests.test_filepaths import *
@@ -6,6 +6,8 @@ from label_sorter.sorter import LabelSorter
 
 class Test_LabelSorter:
     sorter_inst = LabelSorter(pdf_path=amazon_pdf)
+    sorting_summary = sorter_inst.create_sorting_summary()
+    
     files = {
         "Shopify" : shopify_pdf,
         "Amazon" : amazon_pdf
@@ -18,9 +20,7 @@ class Test_LabelSorter:
                 assert platform == inst.find_platform()
 
     def test_create_sorted_summary(self):
-        sorted_summary = self.sorter_inst.create_sorting_summary()
-        print(sorted_summary)
-        assert sorted_summary.keys
+        assert self.sorting_summary.keys
 
     def test_sanitize_filename(self):
         sanitized = self.sorter_inst.sanitize_filename(unsanitized_name)
@@ -28,11 +28,12 @@ class Test_LabelSorter:
 
     def test_create_sorted_pdf_files(self):
         """
-        find the pdf filename, and search for the folder in its name.
-        
+        sort the file, and make sure the output folder and its files exists.
+        find the order counts from the .pdf filenames, and find the total count.
         """
-        summary_keys = self.sorter_inst.create_sorting_summary()
-        created_files = os.listdir(self.sorter_inst.output_folder)
+        assert self.sorting_summary
+        self.sorter_inst.create_sorted_pdf_files()
+        assert self.sorter_inst.output_folder
         
-        assert summary_keys
-        
+    def test_check_output(self):
+        assert self.sorter_inst.check_output() == True

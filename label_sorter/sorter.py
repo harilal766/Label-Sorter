@@ -47,8 +47,7 @@ class LabelSorter:
         
         
     def find_platform(self) -> str:
-        """
-        Finding the platform based on the characteristics of the input file.
+        """Finding the platform based on the characteristics of the input file.
         
         Raises:
             Raises if no such file exists.
@@ -95,8 +94,7 @@ class LabelSorter:
             return platform
 
     def sanitize_filename(self,filename:str):
-        """
-        Removes Reserved characters and product codes from the filename to 
+        """Removes Reserved characters and product codes from the filename to 
         make it suitable for file naming.
 
         Args:
@@ -118,8 +116,7 @@ class LabelSorter:
             raise TypeError(f"Got {type(filename)} instead of string in sanitized filename")
             
     def create_sorting_summary(self):
-        """
-        Adds the product names, variations, the page numbers which consists
+        """Adds the product names, variations, the page numbers which consists
         of it in nested dictionary format. 
         
         Raises:
@@ -236,7 +233,7 @@ class LabelSorter:
 
         output_count = 0
         try:
-            print(f"Sorted Summary :")
+            print(f"Sorted Summary :\n{summary_dict}")
             for sorting_key, value in summary_dict.items():
                 # Assigning output file name and its pages according to order type
                 # single item orders
@@ -255,3 +252,19 @@ class LabelSorter:
                     )
         except Exception as e:
             print(f"Err : {e}")
+            
+    def check_output(self):
+        """Make sure the output folder and its contents exists
+        list out the filenames, and find the order count of each file
+        """
+        output_files = os.listdir(self.output_folder)
+        order_count = 0
+        try:
+            for file in sorted(output_files):
+                order_match = re.findall(r"\d{1,2}\s-\s(\d{1,6})\s{1}order|orders\.pdf",file)[0]
+                if type(order_match) == str and order_match.isnumeric():
+                    order_count += int(order_match)
+            print(order_count)
+            return True
+        except FileNotFoundError:
+            raise FileNotFoundError("Output file does not exist")
