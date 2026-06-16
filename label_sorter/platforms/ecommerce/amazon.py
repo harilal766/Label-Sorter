@@ -5,7 +5,7 @@ class AmazonLabel(BaseLabel):
     ORDER_ID_PATTERN = r'\d{3}-\d{7}-\d{7}'
     TRACKING_ID_PATTERN = r'AWB#*\s\d{12}'
     
-    PAGE_TYPES = ("Shipping Label","Invoice", "Invoice Overlap")
+    PAGE_TYPES = BaseLabel.PAGE_TYPES + ["Invoice", "Invoice Overlap"]
     
     def __init__(self, page_text, page_table,page_num):
         super().__init__(page_text, page_table,page_num)

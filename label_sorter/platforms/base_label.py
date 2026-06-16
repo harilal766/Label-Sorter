@@ -6,7 +6,7 @@ class BaseLabel:
     ORDER_ID_PATTERN : str | None = None
     TRACKING_ID_PATTERN : str | None = None
     
-    PAGE_TYPES : tuple | None = None
+    PAGE_TYPES : list = ["Shipping Label",]
     
     def __init__(self, page_text : str, page_table : list = None, page_num: int = None):
         """
