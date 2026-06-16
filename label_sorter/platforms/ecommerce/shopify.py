@@ -17,7 +17,8 @@ class ShopifyLabel(BaseLabel):
         """
         
     def get_pagetype(self):
-        pass
+        """find specialities of shipping label and invoice pages
+        """
     
     def get_page_summary(self):
         try:
