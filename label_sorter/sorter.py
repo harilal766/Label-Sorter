@@ -29,6 +29,8 @@ class LabelSorter:
         self.platform = self.find_platform()
         self.misc_filename = "Mixed"
         
+        self.order_count = 0
+        
         # regex patterns for filename sanitization which will als be needed for unit testing.
         self.reserved_characters_pattern = r"[,\/\\\:\*\?\"\<\>]"
         #self.product_codes_pattern = r"\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|" # HSN30049011
@@ -150,6 +152,9 @@ class LabelSorter:
                     if label_instance != None:
                         label_instance.get_page_summary()
                         
+                        if label_instance.label_pagetype == label_instance.PAGE_TYPES[0]:
+                            self.order_count += 1
+                        
                         for item_dict in label_instance.label_items:
                             item_count = len(label_instance.label_items)
                             if item_count == 1:
@@ -258,13 +263,13 @@ class LabelSorter:
         list out the filenames, and find the order count of each file
         """
         output_files = os.listdir(self.output_folder)
-        order_count = 0
+        output_order_count = 0
         try:
             for file in sorted(output_files):
                 order_match = re.findall(r"\d{1,2}\s-\s(\d{1,6})\s{1}order|orders\.pdf",file)[0]
                 if type(order_match) == str and order_match.isnumeric():
-                    order_count += int(order_match)
-            print(order_count)
-            return True
+                    output_order_count += int(order_match)
+            print(self.order_count, output_order_count)
+            return self.order_count == output_order_count
         except FileNotFoundError:
             raise FileNotFoundError("Output file does not exist")

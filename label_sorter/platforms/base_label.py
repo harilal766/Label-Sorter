@@ -27,6 +27,7 @@ class BaseLabel:
         self.label_page_text = page_text
         self.label_page_table = page_table
         self.label_page_number = page_num
+        self.label_pagetype = self.get_pagetype()
         
         self.order_id: str | None = None
         self.tracking_id: str | None = None
