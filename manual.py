@@ -3,7 +3,7 @@ from tests.test_filepaths import amazon_pdf
 
 
 sorter = LabelSorter(
-    pdf_path = amazon_pdf
+    pdf_path = input("Enter filepath : ")
 )
 
 
