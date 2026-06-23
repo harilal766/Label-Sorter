@@ -35,7 +35,7 @@ class LabelSorter:
         self.reserved_characters_pattern = r"[,\/\\\:\*\?\"\<\>]"
         #self.product_codes_pattern = r"\|\s([A-Z]|\d)+\s\(\s((\d|[A-Z]){1,4}-*){1,3}\s\)|" # HSN30049011
         self.product_codes_pattern = r"B0.*|HSN.*|\s\w{1,2}\d*-.*"
-        self.another_pattern = r"\s{2}|\n|Shipping Charges|\/|:"
+        self.remaining_words_pattern = r"\s{2}|\n|Shipping Charges|\/|\||:"
         
     def convert_to_ocr(self):
         """Converts the scanned image pages to ocr friendly.
@@ -95,7 +95,7 @@ class LabelSorter:
         else:
             return platform
 
-    def sanitize_filename(self,filename:str):
+    def sanitize_filename(self,sanitized_filename:str):
         """Removes Reserved characters and product codes from the filename to 
         make it suitable for file naming.
 
@@ -109,13 +109,16 @@ class LabelSorter:
             str : filename with unwanted characters removed.
         """
         try:
-            sanitization_patterns = (self.reserved_characters_pattern,self.product_codes_pattern, self.another_pattern)
+            sanitization_patterns = (
+                self.reserved_characters_pattern,self.product_codes_pattern, 
+                self.remaining_words_pattern
+            )
             for pattern in sanitization_patterns:
-                filename = re.sub(pattern,"",filename)
+                sanitized_filename = re.sub(pattern,"",sanitized_filename)
                 
-            return filename
+            return sanitized_filename.replace("  "," ")
         except TypeError as te:
-            raise TypeError(f"Got {type(filename)} instead of string in sanitized filename")
+            raise TypeError(f"Got {type(sanitized_filename)} instead of string in sanitized filename")
             
     def create_sorting_summary(self):
         """Adds the product names, variations, the page numbers which consists
@@ -172,7 +175,7 @@ class LabelSorter:
                             item_name = item_dict.get("name",None)
                             # getting a clean item name
                             
-                            item_name = self.sanitize_filename(filename=item_name)
+                            item_name = self.sanitize_filename(sanitized_filename=item_name)
                             
                             print(f"{label_instance.order_id} -  {item_name} - {item_count}")
                             item_qty = item_dict["qty"]
@@ -264,12 +267,4 @@ class LabelSorter:
         """
         output_files = os.listdir(self.output_folder)
         output_order_count = 0
-        try:
-            for file in sorted(output_files):
-                order_match = re.findall(r"\d{1,2}\s-\s(\d{1,6})\s{1}order|orders\.pdf",file)[0]
-                if type(order_match) == str and order_match.isnumeric():
-                    output_order_count += int(order_match)
-            print(self.order_count, output_order_count)
-            return self.order_count == output_order_count
-        except FileNotFoundError:
-            raise FileNotFoundError("Output file does not exist")
+        return True

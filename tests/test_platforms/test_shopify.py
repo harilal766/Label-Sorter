@@ -22,4 +22,5 @@ class TestShopifyLabel(TestBaseLabel):
         
     def test_get_page_summary(self):
         assert self.sh_inst.get_page_summary()
+        
     

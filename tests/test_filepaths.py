@@ -29,7 +29,7 @@ with open(test_json_filename,"r") as json_file:
     shopify_pdf = os.path.join(test_label_dir, "shopify.pdf")
     
     unsanitized_name = credentials["before_sanitize"]
-    sanitized_name = credentials["after_sanitize"]
+    static_sanitized_name = credentials["after_sanitize"]
     
     
     

@@ -20,11 +20,13 @@ class Test_LabelSorter:
                 assert platform == inst.find_platform()
 
     def test_create_sorted_summary(self):
+        print(self.sorting_summary)
         assert self.sorting_summary.keys
+        
 
     def test_sanitize_filename(self):
-        sanitized = self.sorter_inst.sanitize_filename(unsanitized_name)
-        assert sanitized == sanitized_name
+        sanitized_name = self.sorter_inst.sanitize_filename(unsanitized_name)
+        assert sanitized_name == static_sanitized_name
 
     def test_create_sorted_pdf_files(self):
         """
