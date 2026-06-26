@@ -20,7 +20,6 @@ class Test_LabelSorter:
                 assert platform == inst.find_platform()
 
     def test_create_sorted_summary(self):
-        print(self.sorting_summary)
         assert self.sorting_summary.keys
         
 
@@ -33,7 +32,6 @@ class Test_LabelSorter:
             rf"{self.sorter_inst.product_codes_pattern}|{self.sorter_inst.reserved_characters_pattern}|{self.sorter_inst.remaining_words_pattern}", 
             sanitized_name
         )
-        print(character_matches)
         assert sanitized_name
 
     def test_create_sorted_pdf_files(self):

@@ -155,7 +155,7 @@ class LabelSorter:
                     if label_instance != None:
                         label_instance.get_page_summary()
                         
-                        if label_instance.label_pagetype == label_instance.PAGE_TYPES[0]:
+                        if label_instance.get_pagetype() == label_instance.PAGE_TYPES[1]:
                             self.order_count += 1
                         
                         for item_dict in label_instance.label_items:
@@ -263,8 +263,15 @@ class LabelSorter:
             
     def check_output(self):
         """Make sure the output folder and its contents exists
-        list out the filenames, and find the order count of each file
+        iterate output files and find the order count of each file
+        add it and get the total count,
+        it should match with the number of invoice pages.
         """
-        output_files = os.listdir(self.output_folder)
+        output_files = sorted(os.listdir(self.output_folder))
         output_order_count = 0
-        return True
+        order_count_pattern = r'(\d{1,2})\s(order|orders).pdf'
+        for filename in output_files:
+            order_count_match = re.search(order_count_pattern,filename)
+            output_order_count += int(order_count_match.group(1))
+        print(output_order_count, self.order_count)
+        return output_order_count == self.order_count/2
