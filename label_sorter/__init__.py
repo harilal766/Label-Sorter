@@ -1,1 +1,1 @@
-from .core import LabelSorter
+from .sorter import LabelSorter

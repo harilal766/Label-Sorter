@@ -1,43 +1,45 @@
 import re
-from .base_label import BaseLabel
+from ..base_label import BaseLabel
 
 class ShopifyLabel(BaseLabel):
+    ORDER_ID_PATTERN = r'Order\s.(\d{4,5})'
+    PAGE_TYPES = BaseLabel.PAGE_TYPES + ["Invoice"]
+    
+    LABEL_PROD_PATTERN = r'ITEMS QUANTITY\s*(.*?)\s*Thank you for shopping with us!'
+    LABEL_QTY_PATTERN = r'\d+\sof\s\d+'
+    
     def __init__(self, page_text, page_table,page_num):
         super().__init__(page_text, page_table,page_num)
-        self.shopify_order_id_pattern = r'#\d{4,5}'
-        self.product_name_pattern = r'ITEMS QUANTITY\n(.*)\nThank you for shopping with us'
-        self.qty_pattern = r'(\d+)\sof\s\d+'
         
+    def get_pagetype(self):
+        """Since shopify labels can be modified, the input pdf can come with only shipping labels 
+        or invoices next to it. Right now only the first one is analyzed
+
+        Returns:
+            _type_: _description_
         """
-        # Common 
-        self.page_debrief_dict = {
-            "order_id" : None, "sorting_key" : None, "qty" : None
-        }
-        """
+        page_type = None
+        order_id_match = re.findall(self.ORDER_ID_PATTERN,self.label_page_text)
+        if order_id_match:
+            page_type = self.PAGE_TYPES[0]
+        return page_type
     
-    def analyze_page(self):
+    def get_page_summary(self):
+        """get the product details
+        find the prodname, qty and variation with the help of regex patterns
+
+        Returns:
+            _type_: _description_
+        """
         try:
-            #print(page_text)
-            id_match = re.findall(self.shopify_order_id_pattern, self.page_text)
-            
-            prod_desc_match = re.findall(self.product_name_pattern, self.page_text,flags=re.DOTALL)
-            if id_match:
-                self.page_debrief_dict["order_id"] = id_match[0]
-            
-            if prod_desc_match:
-                # find the product name in string form
-                prod_desc_str = prod_desc_match[0].replace("\n"," ")
-                
-                # check it the order is mixed
-                item_count = len(re.findall(self.qty_pattern,prod_desc_str))
-                    
-                if item_count == 1:
-                    self.page_debrief_dict["qty"] = re.search(self.qty_pattern, prod_desc_str).group(1)
-                    self.page_debrief_dict["sorting_key"] = re.sub(self.qty_pattern,'',prod_desc_str)
-                else:
-                    self.page_debrief_dict["sorting_key"] = "Mixed"
+            if self.get_pagetype() == self.PAGE_TYPES[0]:
+                items =  re.search(self.LABEL_PROD_PATTERN, self.label_page_text, re.DOTALL)
+                if items:
+                    prod_details = items.group(1)
+                    print(prod_details)
+                    qty_splits = re.split(self.LABEL_QTY_PATTERN,prod_details)
+                    print(qty_splits)
+                return items
         except Exception as e:
             print(e)
-        else:
-            return self.page_debrief_dict
     
