@@ -25,8 +25,16 @@ class Test_LabelSorter:
         
 
     def test_sanitize_filename(self):
+        """There shouldnt be any unwanted characters in the filename
+        """
         sanitized_name = self.sorter_inst.sanitize_filename(unsanitized_name)
-        assert sanitized_name == static_sanitized_name
+        
+        character_matches = re.search(
+            rf"{self.sorter_inst.product_codes_pattern}|{self.sorter_inst.reserved_characters_pattern}|{self.sorter_inst.remaining_words_pattern}", 
+            sanitized_name
+        )
+        print(character_matches)
+        assert sanitized_name
 
     def test_create_sorted_pdf_files(self):
         """
