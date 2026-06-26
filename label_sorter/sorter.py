@@ -136,6 +136,7 @@ class LabelSorter:
         pages_list = None
         try:
             with pdfplumber.open(self.input_filepath) as pdf_file:
+                self.order_count = 0
                 for page_index, page in enumerate(pdf_file.pages):
                     page_text = page.extract_text(); page_table = page.extract_tables()
                     page_number = page_index+1
@@ -156,6 +157,7 @@ class LabelSorter:
                         label_instance.get_page_summary()
                         
                         if label_instance.get_pagetype() == label_instance.PAGE_TYPES[1]:
+                            print(label_instance.get_pagetype(), label_instance.PAGE_TYPES[1])
                             self.order_count += 1
                         
                         for item_dict in label_instance.label_items:
@@ -274,4 +276,4 @@ class LabelSorter:
             order_count_match = re.search(order_count_pattern,filename)
             output_order_count += int(order_count_match.group(1))
         print(output_order_count, self.order_count)
-        return output_order_count == self.order_count/2
+        return output_order_count == self.order_count

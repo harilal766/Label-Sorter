@@ -16,7 +16,9 @@ class AmazonLabel(BaseLabel):
     def get_pagetype(self):
         type = None
         try:
-            if re.findall(self.ORDER_ID_PATTERN,self.label_page_text):
+            # Order Number:
+            #if re.findall(self.ORDER_ID_PATTERN,self.label_page_text):
+            if re.findall(r'Order Number:',self.label_page_text):
                 type = self.PAGE_TYPES[1]
             else:
                 if re.findall(r'^Tax Invoice/Bill of Supply/Cash Memo',self.label_page_text):
