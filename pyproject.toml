@@ -1,6 +1,6 @@
 [project]
 name = "label_sorter"
-version = "0.6"
+version = "0.7"
 authors = [
   { name="Harry19967", email="harilalsunil2@gmail.com" },
 ]
@@ -17,3 +17,6 @@ license-files = ["LICEN[CS]E*"]
 [project.urls]
 Homepage = "https://github.com/harilal766/Ecommerce-label-sorter"
 Issues = "https://github.com/harilal766/Ecommerce-label-sorter/issues"
+
+[tool.setuptools.packages.find]
+include = ["label_sorter*"]

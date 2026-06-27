@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: label_sorter
-Version: 0.6
+Version: 0.7
 Summary: Library to sort Amazon and Shopify shipping labels
 Author-email: Harry19967 <harilalsunil2@gmail.com>
 License-Expression: MIT
@@ -17,4 +17,4 @@ Dynamic: license-file
 
 A python library to sort and organize shipping label pdf files. Currently supports Amazon and Shopify.
 
-Documentation : 
+Documentation : https://label-sorter.readthedocs.io/en/latest/
