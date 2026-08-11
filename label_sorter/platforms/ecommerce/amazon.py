@@ -51,7 +51,9 @@ class AmazonLabel(BaseLabel):
                 # Update product rows based on overlapped and normal invoice pages
                 # the whole table in the invoice page is made as a 2d array, it should be made into a dictionary or pandas df form
                 
-                table_df = pd.DataFrame(self.label_page_table[0][1:],columns=self.label_page_table[0][0])
+                self.label_page_table = self.label_page_table[0]
+                
+                table_df = pd.DataFrame(self.label_page_table[1:],columns=self.label_page_table[0])
                 
                 for index, row in table_df.iterrows():
                     #print(row['Sl.\nNo'], row['Description'], row['Qty'])
@@ -59,5 +61,6 @@ class AmazonLabel(BaseLabel):
                         self.label_items.append(
                             {"name":row['Description'], "qty":row['Qty']}
                         )
+                return self.label_items
         except AttributeError:
             raise AttributeError("Check type of the table column")
