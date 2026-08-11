@@ -1,5 +1,7 @@
 import re
+from pprint import pprint
 from ..base_label import BaseLabel
+import pandas as pd
 
 class AmazonLabel(BaseLabel):
     ORDER_ID_PATTERN = r'\d{3}-\d{7}-\d{7}'
@@ -47,13 +49,15 @@ class AmazonLabel(BaseLabel):
             if self.get_pagetype() == self.PAGE_TYPES[1]:
                 self.order_id = self.extract_id("order")
                 # Update product rows based on overlapped and normal invoice pages
-                for row in self.label_page_table[0]:
-                    serial_number_cell = row[0]
-                    if serial_number_cell.isnumeric():
-                        self.label_items.append(
-                            {"name":row[1], "qty":row[3]}
-                        )
+                # the whole table in the invoice page is made as a 2d array, it should be made into a dictionary or pandas df form
                 
+                table_df = pd.DataFrame(self.label_page_table[0][1:],columns=self.label_page_table[0][0])
+                
+                for index, row in table_df.iterrows():
+                    #print(row['Sl.\nNo'], row['Description'], row['Qty'])
+                    if row['Sl.\nNo'].isnumeric():
+                        self.label_items.append(
+                            {"name":row['Description'], "qty":row['Qty']}
+                        )
         except AttributeError:
             raise AttributeError("Check type of the table column")
-        

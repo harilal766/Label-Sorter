@@ -157,7 +157,7 @@ class LabelSorter:
                         label_instance.get_page_summary()
                         
                         if label_instance.get_pagetype() == label_instance.PAGE_TYPES[1]:
-                            print(label_instance.get_pagetype(), label_instance.PAGE_TYPES[1])
+                            #print(label_instance.get_pagetype(), label_instance.PAGE_TYPES[1])
                             self.order_count += 1
                         
                         for item_dict in label_instance.label_items:
@@ -179,7 +179,7 @@ class LabelSorter:
                             
                             item_name = self.sanitize_filename(sanitized_filename=item_name)
                             
-                            print(f"{label_instance.order_id} -  {item_name} - {item_count}")
+                            #print(f"{label_instance.order_id} -  {item_name} - {item_count}")
                             item_qty = item_dict["qty"]
                             # give dedicated dict for each item name.
                             if not item_name in chosen_summary_dict.keys():
@@ -206,7 +206,6 @@ class LabelSorter:
             sys.exit("Received Nonetype instead of page numbers")
         try:
             reader = PdfReader(self.input_filepath); writer = PdfWriter()
-            #print(pdf_name, page_numbers)
             # adding pages to the writer
             for page in page_numbers:
                 writer.add_page(reader.pages[page-1])
