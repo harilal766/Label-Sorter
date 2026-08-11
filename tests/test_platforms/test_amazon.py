@@ -20,14 +20,14 @@ class TestAmazon(TestBaseLabel):
         page_text= test_page.extract_text(), page_table=test_page.extract_table(),
         page_num= testing_index+1
     )
+
     def test_pages(self):
         assert type(self.pages) == list
         assert self.pages[0]
 
     def test_get_page_type(self):
         assert self.am_inst.get_pagetype() == self.am_inst.PAGE_TYPES[1]
-        
+
     def test_get_page_summary(self):
         self.am_inst.get_page_summary()
         assert self.am_inst.order_id
-        

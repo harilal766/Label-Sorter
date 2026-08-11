@@ -1,6 +1,6 @@
 [project]
 name = "label_sorter"
-version = "0.7"
+version = "0.8"
 authors = [
   { name="Harry19967", email="harilalsunil2@gmail.com" },
 ]
