@@ -20,16 +20,13 @@ class IndiapostLabel(BaseLabel):
         # Shipping Label
         if self.get_pagetype() == self.PAGE_TYPES[0]:
             self.tracking_id = self.extract_id("tracking")
-            
-            prodtext = 'Product name Qty\n'
+            header_pattern = r'Product name Qty'
             #self.label_page_table = self.label_page_table[3]
-            for row in self.label_page_table:
-                if prodtext in row[0]:
-                    self.label_page_table = row[0].replace(prodtext,'')
-                    products = re.findall(r'.*\s\d{1,2}$',self.label_page_table)
-                    for product in products:
-                        self.label_items.append({
-                            "name" : ' '.join(product.split(' ')[:-1]), "qty" : product.split(' ')[-1]
-                        })
-            print(self.label_items)
+            product_data = self.label_page_table[0][3][0]
+            products = product_data.split('\n')[1::]
+            for product in products:
+                self.label_items.append({
+                    "name" : ' '.join(product.split(" ")[:-1]),
+                    "qty" : product.split(" ")[-1]
+                })
             return self.label_items

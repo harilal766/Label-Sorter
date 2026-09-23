@@ -157,58 +157,51 @@ class LabelSorter:
                         "Amazon" : AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number),
                         "Indiapost" : IndiapostLabel(page_text=page_text, page_table=page_table, page_num=page_number)
                     }
-                    
-                    """
+                
                     if self.platform == "Shopify":
                         label_instance = ShopifyLabel(page_text=page_text, page_table=page_table,page_num=page_number)
                     elif self.platform == "Amazon":
                         label_instance = AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number)
                     elif self.platform == "Indiapost":
-                        label_instance == IndiapostLabel(page_text=page_text, page_table=page_table, page_num=page_number)
-                    """
+                        label_instance = IndiapostLabel(page_text=page_text, page_table=page_table, page_num=page_number)
                     
-                    label_instance = page_data.get(self.platform,None)
-                    
+                    #label_instance = page_data.get(self.platform,None)
                     if label_instance != None:
-                        label_instance.get_page_summary()
-                        
-                        if label_instance.get_pagetype() == label_instance.PAGE_TYPES[1]:
-                            #print(label_instance.get_pagetype(), label_instance.PAGE_TYPES[1])
-                            self.order_count += 1
+                        page_summary = label_instance.get_page_summary()
+                        #print(label_instance.get_pagetype(),label_instance.get_page_summary())
                         
                         for item_dict in label_instance.label_items:
                             item_count = len(label_instance.label_items)
+                            
                             if item_count == 1:
                                 chosen_summary_dict = summary_dict
                             elif item_count > 1:
                                 if not self.misc_filename in summary_dict.keys():
-                                    summary_dict[self.misc_filename] = {
-                                        "pages" : [], "summary" : {}
-                                    }
+                                    summary_dict[self.misc_filename] = {"pages" : [], "summary" : {}}
                                 chosen_summary_dict = summary_dict[self.misc_filename]["summary"]
                                 for mixed_page in pages:
                                     if not mixed_page in summary_dict[self.misc_filename]["pages"]: 
                                         summary_dict[self.misc_filename]["pages"].append(mixed_page)
-                                        
+                            
                             item_name = item_dict.get("name",None)
                             # getting a clean item name
-                            
                             item_name = self.sanitize_filename(sanitized_filename=item_name)
-                            
                             #print(f"{label_instance.order_id} -  {item_name} - {item_count}")
                             item_qty = item_dict["qty"]
+                            
                             # give dedicated dict for each item name.
                             if not item_name in chosen_summary_dict.keys():
                                 chosen_summary_dict[item_name] = {}
-                            # give empty list or 0 for item name, based on order items.
+                            # insert nested qty dict inside it, which have page number's list as value
                             if not item_qty in chosen_summary_dict[item_name].keys():
                                 chosen_summary_dict[item_name][item_qty] = [] if item_count == 1 else 0
+                                
                             # populate the page numbers or item variation count, based on the same criteria commented above 👆🏼.
                             chosen_summary_dict[item_name][item_qty] += pages if item_count == 1 else 1
         except AttributeError as ae:
             raise AttributeError(f"Attribute issues found at summary dictionary : \n {ae}")
         else:
-            return summary_dict
+            return chosen_summary_dict
             
     def create_pdf_file(self, pdf_name, page_numbers):
         """create each of the output pdf file based on the page numbers
