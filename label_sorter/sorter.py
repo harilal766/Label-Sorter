@@ -4,6 +4,7 @@ from pprint import pprint
 from label_sorter.platforms.base_label import BaseLabel
 from label_sorter.platforms.ecommerce.shopify import ShopifyLabel
 from label_sorter.platforms.ecommerce.amazon import AmazonLabel
+from label_sorter.platforms.courier.indiapost import IndiapostLabel
 
 logging.getLogger('pdfminer').setLevel(logging.ERROR)
 
@@ -63,12 +64,16 @@ class LabelSorter:
         try:
             platform_data = {
                 "Amazon" : {
-                    "order_id_pattern" : AmazonLabel.ORDER_ID_PATTERN,
-                    "order_id_count" : 0
+                    "id_pattern" : AmazonLabel.ORDER_ID_PATTERN,
+                    "id_count" : 0
                 },
                 "Shopify" : {
-                    "order_id_pattern" : ShopifyLabel.ORDER_ID_PATTERN,
-                    "order_id_count" : 0
+                    "id_pattern" : ShopifyLabel.ORDER_ID_PATTERN,
+                    "id_count" : 0
+                },
+                "Indiapost" : {
+                    "id_pattern" : IndiapostLabel.TRACKING_ID_PATTERN,
+                    "id_count" : 0
                 }
             }
             with pdfplumber.open(self.input_filepath) as pdf_file:
@@ -78,17 +83,23 @@ class LabelSorter:
                     page_text = page.extract_text(); page_tables = page.extract_tables()
                     for platform,datas in platform_data.items():
                         order_id_match = re.findall(
-                            datas["order_id_pattern"],page_text
+                            datas["id_pattern"],page_text
+                        )
+                        tracking_id_match = re.findall(
+                            datas.get("id_pattern",None), page_text
                         )
                         if order_id_match:
-                            datas["order_id_count"] += 1
+                            datas["id_count"] += 1
+                        elif tracking_id_match:
+                            datas["id_count"] +=1
                             
-                            
-            if total_pages == platform_data["Shopify"]["order_id_count"]:
+            if total_pages == platform_data["Shopify"]["id_count"]:
                 platform = "Shopify"
                 # this condition is not complete, need more stricter verification
-            elif platform_data["Amazon"]["order_id_count"] > 0:
+            elif platform_data["Amazon"]["id_count"] > 0:
                 platform = "Amazon"
+            elif platform_data["Indiapost"]["id_count"] > 0:
+                platform = "Indiapost"
             
         except FileNotFoundError:
             print(f"The file {self.input_filepath} does not exist.")
@@ -144,14 +155,19 @@ class LabelSorter:
                     page_data = {
                         "Shopify" : ShopifyLabel(page_text=page_text, page_table=page_table,page_num=page_number),
                         "Amazon" : AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number),
+                        "Indiapost" : IndiapostLabel(page_text=page_text, page_table=page_table, page_num=page_number)
                     }
                     
+                    """
                     if self.platform == "Shopify":
                         label_instance = ShopifyLabel(page_text=page_text, page_table=page_table,page_num=page_number)
                     elif self.platform == "Amazon":
                         label_instance = AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number)
+                    elif self.platform == "Indiapost":
+                        label_instance == IndiapostLabel(page_text=page_text, page_table=page_table, page_num=page_number)
+                    """
                     
-                    #label_instance = page_data.get(self.platform,None)
+                    label_instance = page_data.get(self.platform,None)
                     
                     if label_instance != None:
                         label_instance.get_page_summary()

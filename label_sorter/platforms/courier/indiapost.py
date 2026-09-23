@@ -21,12 +21,15 @@ class IndiapostLabel(BaseLabel):
         if self.get_pagetype() == self.PAGE_TYPES[0]:
             self.tracking_id = self.extract_id("tracking")
             
-            self.label_page_table = self.label_page_table[3]
-            
+            prodtext = 'Product name Qty\n'
+            #self.label_page_table = self.label_page_table[3]
             for row in self.label_page_table:
-                row = re.sub(r'Product name Qty\n','',row)
-                product = row.split(' ')
-                self.label_items.append({
-                    "name" : ' '.join(product[:-1]), "qty" : product[-1]
-                })
+                if prodtext in row[0]:
+                    self.label_page_table = row[0].replace(prodtext,'')
+                    products = re.findall(r'.*\s\d{1,2}$',self.label_page_table)
+                    for product in products:
+                        self.label_items.append({
+                            "name" : ' '.join(product.split(' ')[:-1]), "qty" : product.split(' ')[-1]
+                        })
+            print(self.label_items)
             return self.label_items

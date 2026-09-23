@@ -19,18 +19,14 @@ class TestIndiapost(TestBaseLabel):
         
     def test_extract_id(self):
         id = self.in_inst.extract_id(pattern_type="tracking")
-        print(id)
         assert id
         
     def test_get_pagetype(self):
         page_type = self.in_inst.get_pagetype()
-        print(page_type)
         assert page_type == self.in_inst.PAGE_TYPES[0]
         
     def test_get_pagesummary(self):
         summary = self.in_inst.get_page_summary()
-        print(summary)
-        
         assert summary
 
     
