@@ -22,7 +22,11 @@ class IndiapostLabel(BaseLabel):
             self.tracking_id = self.extract_id("tracking")
             
             self.label_page_table = self.label_page_table[3]
-            return self.label_page_table
-    
-    
-    
+            
+            for row in self.label_page_table:
+                row = re.sub(r'Product name Qty\n','',row)
+                product = row.split(' ')
+                self.label_items.append({
+                    "name" : ' '.join(product[:-1]), "qty" : product[-1]
+                })
+            return self.label_items
