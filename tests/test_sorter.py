@@ -6,7 +6,7 @@ from label_sorter.sorter import LabelSorter
 
 class Test_LabelSorter:    
     platforms = {
-        #"Amazon" : amazon_pdf
+        "Amazon" : amazon_pdf,
         "Indiapost" : indiapost_pdf
     }
     
@@ -21,11 +21,11 @@ class Test_LabelSorter:
         for platform,file in self.platforms.items():
             sorter_inst = LabelSorter(pdf_path=file)
             summary = sorter_inst.create_sorting_summary()
+            print(summary)
             assert len(summary.keys()) > 0
 
-"""
+
     def test_create_sorted_pdf_files(self):
         for platform,file in self.platforms.items():
             sorter_inst = LabelSorter(pdf_path=file)
             sorter_inst.create_sorted_pdf_files()
-"""

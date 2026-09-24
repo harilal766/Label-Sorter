@@ -141,10 +141,8 @@ class LabelSorter:
         Returns:
             dict : dictionary that contains full summary of the input pdf file.
         """
-        page_summary = None; 
         # summary dictionaries
-        summary_dict = {}; chosen_summary_dict = {}
-        pages_list = None
+        summary_dict = {}
         try:
             with pdfplumber.open(self.input_filepath) as pdf_file:
                 self.order_count = 0
@@ -167,20 +165,34 @@ class LabelSorter:
                     #label_instance = page_data.get(self.platform,None)
                     
                     
+                    
                     if label_instance != None:
                         page_summary = label_instance.get_page_summary()
                         if page_summary != None:
-                            for item_dict in page_summary:
-                                item_count = len(label_instance.label_items)
-                                
-                                
+                            pages_to_insert = [label_instance.page_number - 1,label_instance.page_number] if self.platform == "Amazon" else [label_instance.page_number]
+                            # Mixed
+                            if len(page_summary) > 1:
+                                # created dedicated nested dict if not exists
+                                if not self.misc_filename in summary_dict.keys():
+                                    summary_dict[self.misc_filename] = {"pages":[]}
+                                # decide pages to insert based on the platform
+                                summary_dict[self.misc_filename]["pages"] += pages_to_insert
+                                # add page numbers to the dict
+                            elif len(page_summary) == 1 :
+                                prodname = self.sanitize_filename(page_summary[0]["name"]); prod_qty = page_summary[0]["qty"]
+                                # add product name to the summary dict if not exists
+                                if not prodname in summary_dict.keys():
+                                    summary_dict[prodname] = {}
+                                # add nested qty dict to the summary dict if not exists
+                                if not prod_qty in summary_dict[prodname].keys():
+                                    summary_dict[prodname][prod_qty] = pages_to_insert
                         else:
                             print("Page summary is empty")
                     
         except AttributeError as ae:
             raise AttributeError(f"Attribute issues found at summary dictionary : \n {ae}")
         else:
-            return chosen_summary_dict
+            return summary_dict
             
     def create_pdf_file(self, pdf_name, page_numbers):
         """create each of the output pdf file based on the page numbers
