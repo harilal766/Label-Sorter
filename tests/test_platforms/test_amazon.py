@@ -29,5 +29,5 @@ class TestAmazon(TestBaseLabel):
         assert self.am_inst.get_pagetype() == self.am_inst.PAGE_TYPES[1]
 
     def test_get_page_summary(self):
-        self.am_inst.get_page_summary()
-        assert self.am_inst.order_id
+        summary = self.am_inst.get_page_summary()
+        assert summary

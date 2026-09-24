@@ -28,7 +28,9 @@ MarkupSafe==3.0.2
 mdurl==0.1.2
 more-itertools==10.7.0
 nh3==0.3.0
+numpy==2.5.3
 packaging==25.0
+pandas==3.0.6
 pdfminer.six==20250506
 pdfplumber==0.11.7
 pillow==11.3.0

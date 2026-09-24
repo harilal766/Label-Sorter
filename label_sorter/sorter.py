@@ -4,6 +4,7 @@ from pprint import pprint
 from label_sorter.platforms.base_label import BaseLabel
 from label_sorter.platforms.ecommerce.shopify import ShopifyLabel
 from label_sorter.platforms.ecommerce.amazon import AmazonLabel
+from label_sorter.platforms.courier.indiapost import IndiapostLabel
 
 logging.getLogger('pdfminer').setLevel(logging.ERROR)
 
@@ -63,12 +64,16 @@ class LabelSorter:
         try:
             platform_data = {
                 "Amazon" : {
-                    "order_id_pattern" : AmazonLabel.ORDER_ID_PATTERN,
-                    "order_id_count" : 0
+                    "id_pattern" : AmazonLabel.ORDER_ID_PATTERN,
+                    "id_count" : 0
                 },
                 "Shopify" : {
-                    "order_id_pattern" : ShopifyLabel.ORDER_ID_PATTERN,
-                    "order_id_count" : 0
+                    "id_pattern" : ShopifyLabel.ORDER_ID_PATTERN,
+                    "id_count" : 0
+                },
+                "Indiapost" : {
+                    "id_pattern" : IndiapostLabel.TRACKING_ID_PATTERN,
+                    "id_count" : 0
                 }
             }
             with pdfplumber.open(self.input_filepath) as pdf_file:
@@ -78,17 +83,23 @@ class LabelSorter:
                     page_text = page.extract_text(); page_tables = page.extract_tables()
                     for platform,datas in platform_data.items():
                         order_id_match = re.findall(
-                            datas["order_id_pattern"],page_text
+                            datas["id_pattern"],page_text
+                        )
+                        tracking_id_match = re.findall(
+                            datas.get("id_pattern",None), page_text
                         )
                         if order_id_match:
-                            datas["order_id_count"] += 1
+                            datas["id_count"] += 1
+                        elif tracking_id_match:
+                            datas["id_count"] +=1
                             
-                            
-            if total_pages == platform_data["Shopify"]["order_id_count"]:
+            if total_pages == platform_data["Shopify"]["id_count"]:
                 platform = "Shopify"
                 # this condition is not complete, need more stricter verification
-            elif platform_data["Amazon"]["order_id_count"] > 0:
+            elif platform_data["Amazon"]["id_count"] > 0:
                 platform = "Amazon"
+            elif platform_data["Indiapost"]["id_count"] > 0:
+                platform = "Indiapost"
             
         except FileNotFoundError:
             print(f"The file {self.input_filepath} does not exist.")
@@ -130,10 +141,8 @@ class LabelSorter:
         Returns:
             dict : dictionary that contains full summary of the input pdf file.
         """
-        page_summary = None; 
         # summary dictionaries
-        summary_dict = {}; chosen_summary_dict = {}
-        pages_list = None
+        summary_dict = {}
         try:
             with pdfplumber.open(self.input_filepath) as pdf_file:
                 self.order_count = 0
@@ -144,51 +153,42 @@ class LabelSorter:
                     page_data = {
                         "Shopify" : ShopifyLabel(page_text=page_text, page_table=page_table,page_num=page_number),
                         "Amazon" : AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number),
+                        "Indiapost" : IndiapostLabel(page_text=page_text, page_table=page_table, page_num=page_number)
                     }
-                    
+                
                     if self.platform == "Shopify":
                         label_instance = ShopifyLabel(page_text=page_text, page_table=page_table,page_num=page_number)
                     elif self.platform == "Amazon":
                         label_instance = AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number)
-                    
+                    elif self.platform == "Indiapost":
+                        label_instance = IndiapostLabel(page_text=page_text, page_table=page_table, page_num=page_number)
                     #label_instance = page_data.get(self.platform,None)
                     
+                    
+                    
                     if label_instance != None:
-                        label_instance.get_page_summary()
-                        
-                        if label_instance.get_pagetype() == label_instance.PAGE_TYPES[1]:
-                            #print(label_instance.get_pagetype(), label_instance.PAGE_TYPES[1])
-                            self.order_count += 1
-                        
-                        for item_dict in label_instance.label_items:
-                            item_count = len(label_instance.label_items)
-                            if item_count == 1:
-                                chosen_summary_dict = summary_dict
-                            elif item_count > 1:
+                        page_summary = label_instance.get_page_summary()
+                        if page_summary != None:
+                            pages_to_insert = [label_instance.page_number - 1,label_instance.page_number] if self.platform == "Amazon" else [label_instance.page_number]
+                            # Mixed
+                            if len(page_summary) > 1:
+                                # created dedicated nested dict if not exists
                                 if not self.misc_filename in summary_dict.keys():
-                                    summary_dict[self.misc_filename] = {
-                                        "pages" : [], "summary" : {}
-                                    }
-                                chosen_summary_dict = summary_dict[self.misc_filename]["summary"]
-                                for mixed_page in pages:
-                                    if not mixed_page in summary_dict[self.misc_filename]["pages"]: 
-                                        summary_dict[self.misc_filename]["pages"].append(mixed_page)
-                                        
-                            item_name = item_dict.get("name",None)
-                            # getting a clean item name
-                            
-                            item_name = self.sanitize_filename(sanitized_filename=item_name)
-                            
-                            #print(f"{label_instance.order_id} -  {item_name} - {item_count}")
-                            item_qty = item_dict["qty"]
-                            # give dedicated dict for each item name.
-                            if not item_name in chosen_summary_dict.keys():
-                                chosen_summary_dict[item_name] = {}
-                            # give empty list or 0 for item name, based on order items.
-                            if not item_qty in chosen_summary_dict[item_name].keys():
-                                chosen_summary_dict[item_name][item_qty] = [] if item_count == 1 else 0
-                            # populate the page numbers or item variation count, based on the same criteria commented above 👆🏼.
-                            chosen_summary_dict[item_name][item_qty] += pages if item_count == 1 else 1
+                                    summary_dict[self.misc_filename] = {"pages":[]}
+                                # decide pages to insert based on the platform
+                                summary_dict[self.misc_filename]["pages"] += pages_to_insert
+                                # add page numbers to the dict
+                            elif len(page_summary) == 1 :
+                                prodname = self.sanitize_filename(page_summary[0]["name"]); prod_qty = page_summary[0]["qty"]
+                                # add product name to the summary dict if not exists
+                                if not prodname in summary_dict.keys():
+                                    summary_dict[prodname] = {}
+                                # add nested qty dict to the summary dict if not exists
+                                if not prod_qty in summary_dict[prodname].keys():
+                                    summary_dict[prodname][prod_qty] = pages_to_insert
+                        else:
+                            print("Page summary is empty")
+                    
         except AttributeError as ae:
             raise AttributeError(f"Attribute issues found at summary dictionary : \n {ae}")
         else:
@@ -242,7 +242,6 @@ class LabelSorter:
 
         output_count = 0
         try:
-            print(f"Sorted Summary :\n{summary_dict}")
             for sorting_key, value in summary_dict.items():
                 # Assigning output file name and its pages according to order type
                 # single item orders
@@ -274,5 +273,4 @@ class LabelSorter:
         for filename in output_files:
             order_count_match = re.search(order_count_pattern,filename)
             output_order_count += int(order_count_match.group(1))
-        print(output_order_count, self.order_count)
         return output_order_count == self.order_count
