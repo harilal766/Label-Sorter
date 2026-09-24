@@ -169,14 +169,14 @@ class LabelSorter:
                     if label_instance != None:
                         page_summary = label_instance.get_page_summary()
                         if page_summary != None:
-                            pages_to_insert = [label_instance.page_number - 1,label_instance.page_number] if self.platform == "Amazon" else [label_instance.page_number]
+                            page_numbers = [label_instance.page_number - 1,label_instance.page_number] if self.platform == "Amazon" else [label_instance.page_number]
                             # Mixed
                             if len(page_summary) > 1:
                                 # created dedicated nested dict if not exists
                                 if not self.misc_filename in summary_dict.keys():
                                     summary_dict[self.misc_filename] = {"pages":[]}
                                 # decide pages to insert based on the platform
-                                summary_dict[self.misc_filename]["pages"] += pages_to_insert
+                                summary_dict[self.misc_filename]["pages"] += page_numbers
                                 # add page numbers to the dict
                             elif len(page_summary) == 1 :
                                 prodname = self.sanitize_filename(page_summary[0]["name"]); prod_qty = page_summary[0]["qty"]
@@ -185,7 +185,9 @@ class LabelSorter:
                                     summary_dict[prodname] = {}
                                 # add nested qty dict to the summary dict if not exists
                                 if not prod_qty in summary_dict[prodname].keys():
-                                    summary_dict[prodname][prod_qty] = pages_to_insert
+                                    summary_dict[prodname][prod_qty] = []
+                                # populate the page numbers
+                                summary_dict[prodname][prod_qty] += page_numbers
                         else:
                             print("Page summary is empty")
                     
