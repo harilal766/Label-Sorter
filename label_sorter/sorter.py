@@ -164,40 +164,19 @@ class LabelSorter:
                         label_instance = AmazonLabel(page_text=page_text, page_table=page_table,page_num=page_number)
                     elif self.platform == "Indiapost":
                         label_instance = IndiapostLabel(page_text=page_text, page_table=page_table, page_num=page_number)
-                    
                     #label_instance = page_data.get(self.platform,None)
+                    
+                    
                     if label_instance != None:
                         page_summary = label_instance.get_page_summary()
-                        #print(label_instance.get_pagetype(),label_instance.get_page_summary())
-                        
-                        for item_dict in label_instance.label_items:
-                            item_count = len(label_instance.label_items)
-                            
-                            if item_count == 1:
-                                chosen_summary_dict = summary_dict
-                            elif item_count > 1:
-                                if not self.misc_filename in summary_dict.keys():
-                                    summary_dict[self.misc_filename] = {"pages" : [], "summary" : {}}
-                                chosen_summary_dict = summary_dict[self.misc_filename]["summary"]
-                                for mixed_page in pages:
-                                    if not mixed_page in summary_dict[self.misc_filename]["pages"]: 
-                                        summary_dict[self.misc_filename]["pages"].append(mixed_page)
-                            
-                            item_name = item_dict.get("name",None)
-                            # getting a clean item name
-                            item_name = self.sanitize_filename(sanitized_filename=item_name)
-                            #print(f"{label_instance.order_id} -  {item_name} - {item_count}")
-                            item_qty = item_dict["qty"]
-                            
-                            # give dedicated dict for each item name.
-                            if not item_name in chosen_summary_dict.keys():
-                                chosen_summary_dict[item_name] = {}
-                            # insert nested qty dict inside it, which have page number's list as value
-                            if not item_qty in chosen_summary_dict[item_name].keys():
-                                chosen_summary_dict[item_name][item_qty] = [] if item_count == 1 else 0
+                        if page_summary != None:
+                            for item_dict in page_summary:
+                                item_count = len(label_instance.label_items)
                                 
-                            # populate the page numbers or item variation count, based on the same criteria commented above 👆🏼.
-                            chosen_summary_dict[item_name][item_qty] += pages if item_count == 1 else 1
+                                
+                        else:
+                            print("Page summary is empty")
+                    
         except AttributeError as ae:
             raise AttributeError(f"Attribute issues found at summary dictionary : \n {ae}")
         else:
@@ -251,7 +230,6 @@ class LabelSorter:
 
         output_count = 0
         try:
-            print(f"Sorted Summary :\n{summary_dict}")
             for sorting_key, value in summary_dict.items():
                 # Assigning output file name and its pages according to order type
                 # single item orders
@@ -283,5 +261,4 @@ class LabelSorter:
         for filename in output_files:
             order_count_match = re.search(order_count_pattern,filename)
             output_order_count += int(order_count_match.group(1))
-        print(output_order_count, self.order_count)
         return output_order_count == self.order_count

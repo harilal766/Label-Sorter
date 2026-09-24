@@ -8,7 +8,7 @@ class TestIndiapost(TestBaseLabel):
     pdf = pdfplumber.open(indiapost_pdf)
     pages = pdf.pages
     
-    testing_index = 0; test_page = pages[testing_index]
+    testing_index = 1; test_page = pages[testing_index]
     in_inst = IndiapostLabel(
         page_text=test_page.extract_text(), page_table=test_page.extract_table(),
         page_num=1
@@ -16,7 +16,7 @@ class TestIndiapost(TestBaseLabel):
     
     def test_pages(self):
         assert type(self.pages) == list
-"""   
+
     def test_extract_id(self):
         id = self.in_inst.extract_id(pattern_type="tracking")
         assert id
@@ -24,11 +24,12 @@ class TestIndiapost(TestBaseLabel):
     def test_get_pagetype(self):
         page_type = self.in_inst.get_pagetype()
         assert page_type == self.in_inst.PAGE_TYPES[0]
-        
+
     def test_get_pagesummary(self):
-        summary = self.in_inst.get_page_summary()
-        assert summary    
-"""
+        page_summary = self.in_inst.get_page_summary()
+        print(page_summary)
+        assert len(page_summary) > 0
+
 
 
 

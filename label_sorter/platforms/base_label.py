@@ -25,8 +25,8 @@ class BaseLabel:
             page_num (int, optional): Page number. Defaults to None.
         """
         self.label_page_text = page_text
-        self.label_page_table = page_table
-        self.label_page_number = page_num
+        self.page_table = page_table
+        self.page_number = page_num
         self.label_pagetype = self.get_pagetype()
         
         self.order_id: str | None = None
@@ -57,9 +57,9 @@ class BaseLabel:
     def get_page_summary(self):
         pass
         basic_page_summary = {
-            "page_number" : self.label_page_number,
+            "page_number" : self.page_number,
             "page_text" : self.label_page_text,
-            "page_table" : self.label_page_table,
+            "page_table" : self.page_table,
             
             "order_id" : self.order_id,
             "items" : self.label_items
