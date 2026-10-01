@@ -55,13 +55,15 @@ class AmazonLabel(BaseLabel):
                 
                 table_df = pd.DataFrame(self.page_table[1:],columns=self.page_table[0])
                 
+                #print(table_df)
+                
                 for index, row in table_df.iterrows():
                     #print(row['Sl.\nNo'], row['Description'], row['Qty'])
-                    if row['Sl.\nNo'].isnumeric():
-                        self.label_items.append(
-                            {"name":row['Description'], "qty":row['Qty']}
+                    if not pd.isna(row['Sl.\nNo']):
+                        if row['Sl.\nNo'].isnumeric():
+                            self.label_items.append(
+                                {"name":row['Description'], "qty":row['Qty']}
                         )
-                print(self.label_items)
                 return self.label_items
         except AttributeError:
-            raise AttributeError("Check type of the table column")
+            raise AttributeError(f"Found issue at {row['Sl.\nNo']}, Check type of the table column")

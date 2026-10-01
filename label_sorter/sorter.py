@@ -131,15 +131,29 @@ class LabelSorter:
         except TypeError as te:
             raise TypeError(f"Got {type(sanitized_filename)} instead of string in sanitized filename")
             
-    def create_sorting_summary(self):
-        """Adds the product names, variations, the page numbers which consists
-        of it in nested dictionary format. 
-        
-        Raises:
-            AttributeError: _description_
+    def create_sorting_summary(self) -> dict:
+        """Build a page-level sorting summary of the input PDF.
+
+        Groups page numbers by product and variation. Single-item orders map
+        each variation to the pages it appears on. Mixed orders are collected
+        under the ``"Mixed"`` key, with their page numbers and
+        variation count.
 
         Returns:
-            dict : dictionary that contains full summary of the input pdf file.
+            dict: Full summary of the input PDF, shaped like this:
+
+            .. code-block:: python
+
+                {
+                    "Product A": {1: [1, 2], 3: [8, 9]},
+                    "Mixed": {
+                        "pages": [4, 5, 10, 11],
+                        "summary": {"Product A": {1: 4, 2: 3}},
+                    },
+                }
+
+        Raises:
+            AttributeError: If the PDF has not been loaded yet.
         """
         # summary dictionaries
         summary_dict = {}
@@ -171,6 +185,7 @@ class LabelSorter:
                         if page_summary != None:
                             page_numbers = [label_instance.page_number - 1,label_instance.page_number] if self.platform == "Amazon" else [label_instance.page_number]
                             # Mixed
+                            #print(f"{page_numbers} : {label_instance.label_items}")
                             if len(page_summary) > 1:
                                 # created dedicated nested dict if not exists
                                 if not self.misc_filename in summary_dict.keys():
