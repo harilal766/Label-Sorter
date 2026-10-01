@@ -138,6 +138,7 @@ class LabelSorter:
         each variation to the pages it appears on. Mixed orders are collected
         under the ``"Mixed"`` key, with their page numbers and
         variation count.
+        
 
         Returns:
             dict: Full summary of the input PDF, shaped like this:
@@ -147,8 +148,8 @@ class LabelSorter:
                 {
                     "Product A": {1: [1, 2], 3: [8, 9]},
                     "Mixed": {
-                        "pages": [4, 5, 10, 11],
                         "summary": {"Product A": {1: 4, 2: 3}},
+                        "pages": [4, 5, 10, 11],
                     },
                 }
 
@@ -190,6 +191,18 @@ class LabelSorter:
                                 # created dedicated nested dict if not exists
                                 if not self.misc_filename in summary_dict.keys():
                                     summary_dict[self.misc_filename] = {"pages":[]}
+                                    
+                                # adding nested summary dict
+                                if not "summary" in summary_dict[self.misc_filename].keys():
+                                    summary_dict[self.misc_filename]["summary"] = {}
+                                    
+                                # populating the summary dict values
+                                for mixed_summary_dict in page_summary:
+                                    # adding product name to the summary dict
+                                    if not mixed_summary_dict['name'] in summary_dict[self.misc_filename]['summary']:
+                                        summary_dict[self.misc_filename]['summary'][mixed_summary_dict['name']] = 0
+                                    summary_dict[self.misc_filename]['summary'][mixed_summary_dict['name']] += 1
+                                    
                                 # decide pages to insert based on the platform
                                 summary_dict[self.misc_filename]["pages"] += page_numbers
                                 # add page numbers to the dict

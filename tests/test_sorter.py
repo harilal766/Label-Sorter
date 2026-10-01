@@ -3,6 +3,7 @@ import sys, os, pytest, re
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from tests.test_filepaths import *
 from label_sorter.sorter import LabelSorter
+from pprint import pprint
 
 class Test_LabelSorter:    
     platforms = {
@@ -21,7 +22,7 @@ class Test_LabelSorter:
         for platform,file in self.platforms.items():
             sorter_inst = LabelSorter(pdf_path=file)
             summary = sorter_inst.create_sorting_summary()
-            print(summary)
+            pprint(summary)
             assert len(summary.keys()) > 0
 
 
