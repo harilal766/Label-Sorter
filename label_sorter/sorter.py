@@ -184,9 +184,10 @@ class LabelSorter:
                     if label_instance != None:
                         page_summary = label_instance.get_page_summary()
                         if page_summary != None:
+                            # decide pages to insert based on the platform
                             page_numbers = [label_instance.page_number - 1,label_instance.page_number] if self.platform == "Amazon" else [label_instance.page_number]
-                            # Mixed
                             #print(f"{page_numbers} : {label_instance.label_items}")
+                            # Mixed
                             if len(page_summary) > 1:
                                 # created dedicated nested dict if not exists
                                 if not self.misc_filename in summary_dict.keys():
@@ -203,7 +204,6 @@ class LabelSorter:
                                         summary_dict[self.misc_filename]['summary'][mixed_summary_dict['name']] = 0
                                     summary_dict[self.misc_filename]['summary'][mixed_summary_dict['name']] += 1
                                     
-                                # decide pages to insert based on the platform
                                 summary_dict[self.misc_filename]["pages"] += page_numbers
                                 # add page numbers to the dict
                             elif len(page_summary) == 1 :
