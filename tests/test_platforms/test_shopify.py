@@ -11,7 +11,7 @@ class TestShopifyLabel(TestBaseLabel):
     pdf = pdfplumber.open(shopify_pdf)
     pages = pdf.pages
     
-    testing_index = 8 ; test_page = pages[testing_index]
+    testing_index = 24 ; test_page = pages[testing_index]
     sh_inst = ShopifyLabel(
         page_text= test_page.extract_text(), page_table=test_page.extract_table(),
         page_num= testing_index+1
@@ -21,6 +21,6 @@ class TestShopifyLabel(TestBaseLabel):
         assert self.sh_inst.get_pagetype() == ShopifyLabel.PAGE_TYPES[0]
         
     def test_get_page_summary(self):
-        assert self.sh_inst.get_page_summary()
-        
-    
+        shopify_summary = self.sh_inst.get_page_summary()
+        print(shopify_summary)
+        assert shopify_summary

@@ -36,9 +36,8 @@ class ShopifyLabel(BaseLabel):
                 items =  re.search(self.LABEL_PROD_PATTERN, self.label_page_text, re.DOTALL)
                 if items:
                     prod_details = items.group(1)
-                    print(prod_details)
                     qty_splits = re.split(self.LABEL_QTY_PATTERN,prod_details)
-                    print(qty_splits)
+                    prodnames = 
                 return items
         except Exception as e:
             print(e)
