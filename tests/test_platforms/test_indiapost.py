@@ -29,8 +29,5 @@ class TestIndiapost(TestBaseLabel):
         page_summary = self.in_inst.get_page_summary()
         print(page_summary)
         assert len(page_summary) > 0
-
-
-
-
-
+        
+        

@@ -7,16 +7,20 @@ from pprint import pprint
 
 class Test_LabelSorter:    
     platforms = {
+        "Shopify" : shopify_pdf,
         "Amazon" : amazon_pdf,
         "Indiapost" : indiapost_pdf
     }
     
     def test_find_platfrom(self):
-        for platform,file in self.platforms.items():
+        for real_platform,file in self.platforms.items():
             sorter_inst = LabelSorter(pdf_path=file)
-            
             tested_platform = sorter_inst.find_platform()
-            assert tested_platform == platform
+            print(tested_platform, real_platform)
+            assert tested_platform == real_platform
+            
+    def test_sanitize_filename(self):
+        pass
 
     def test_create_sorting_summary(self):
         for platform,file in self.platforms.items():

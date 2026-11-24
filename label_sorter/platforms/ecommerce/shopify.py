@@ -32,13 +32,12 @@ class ShopifyLabel(BaseLabel):
             _type_: _description_
         """
         try:
+            # Verify the page is a shipping label
             if self.get_pagetype() == self.PAGE_TYPES[0]:
-                items =  re.search(self.LABEL_PROD_PATTERN, self.label_page_text, re.DOTALL)
-                if items:
-                    prod_details = items.group(1)
-                    qty_splits = re.split(self.LABEL_QTY_PATTERN,prod_details)
-                    prodnames = 
-                return items
+                self.label_items.append({
+                    "name" : None, "qty" : None
+                })
+                return self.label_items
         except Exception as e:
             print(e)
     

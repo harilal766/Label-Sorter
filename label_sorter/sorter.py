@@ -120,16 +120,17 @@ class LabelSorter:
             str : filename with unwanted characters removed.
         """
         try:
-            sanitization_patterns = (
-                self.reserved_characters_pattern,self.product_codes_pattern, 
-                self.remaining_words_pattern
-            )
-            for pattern in sanitization_patterns:
-                sanitized_filename = re.sub(pattern,"",sanitized_filename)
-                
-            return sanitized_filename.replace("  "," ")
+            if sanitized_filename != None:
+                sanitization_patterns = (
+                    self.reserved_characters_pattern,self.product_codes_pattern, 
+                    self.remaining_words_pattern
+                )
+                for pattern in sanitization_patterns:
+                    sanitized_filename = re.sub(pattern,"",sanitized_filename)
+                    
+                return sanitized_filename.replace("  "," ")
         except TypeError as te:
-            raise TypeError(f"Got {type(sanitized_filename)} instead of string in sanitized filename")
+            raise TypeError(f"{te}\nGot {type(sanitized_filename)} instead of string in sanitized filename")
             
     def create_sorting_summary(self) -> dict:
         """Build a page-level sorting summary of the input PDF.
@@ -207,15 +208,17 @@ class LabelSorter:
                                 summary_dict[self.misc_filename]["pages"] += page_numbers
                                 # add page numbers to the dict
                             elif len(page_summary) == 1 :
-                                prodname = self.sanitize_filename(page_summary[0]["name"]); prod_qty = page_summary[0]["qty"]
-                                # add product name to the summary dict if not exists
-                                if not prodname in summary_dict.keys():
-                                    summary_dict[prodname] = {}
-                                # add nested qty dict to the summary dict if not exists
-                                if not prod_qty in summary_dict[prodname].keys():
-                                    summary_dict[prodname][prod_qty] = []
-                                # populate the page numbers
-                                summary_dict[prodname][prod_qty] += page_numbers
+                                prodname = self.sanitize_filename(page_summary[0]["name"])
+                                prod_qty = page_summary[0]["qty"]
+                                if prodname != None:
+                                    # add product name to the summary dict if not exists
+                                    if not prodname in summary_dict.keys():
+                                        summary_dict[prodname] = {}
+                                    # add nested qty dict to the summary dict if not exists
+                                    if not prod_qty in summary_dict[prodname].keys():
+                                        summary_dict[prodname][prod_qty] = []
+                                    # populate the page numbers
+                                    summary_dict[prodname][prod_qty] += page_numbers
                         else:
                             print("Page summary is empty")
                     
